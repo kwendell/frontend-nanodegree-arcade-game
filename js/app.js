@@ -6,6 +6,10 @@ var Enemy = function() {
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
+    // set the initial enemay coordinates to
+    // the botoom of the screen.
+   // var canvasInstance = $("canvas")[;
+   // console.log(canvasInstance.width);
 }
 
 // Update the enemy's position, required method for game
@@ -14,11 +18,19 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
+   // console.log(dt);
+  // var now = Date.now();
+  // if (now % 10==0) {console.log(dt);}
+
+
 }
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+
+    // var now = Date.now();
+   //if (now % 10==0) {console.log("hello");}
 }
 
 // Now write your own player class
@@ -41,7 +53,9 @@ player = new Player();
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-var allEnemies = [];
+var anEnemy = new Enemy();
+//anEnemy.render();
+var allEnemies = [anEnemy];
 
 
 // This listens for key presses and sends the keys to your
