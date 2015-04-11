@@ -1,5 +1,5 @@
 // Enemies our player must avoid
-var Enemy = function() {
+var Enemy = function(timeToTraverse) {
 ; // Variables applied to each of our instances go here,
     // we've provided one for you to get started
 
@@ -8,8 +8,10 @@ var Enemy = function() {
     this.sprite = 'images/enemy-bug.png';
     // set the initial enemay coordinates to
     // the botoom of the screen.
-   // var canvasInstance = $("canvas")[;
-   // console.log(canvasInstance.width);
+    this.x = 0;
+    this.y = 0;
+    this.time=timeToTraverse;
+   
 }
 
 // Update the enemy's position, required method for game
@@ -18,9 +20,19 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
-   // console.log(dt);
-  // var now = Date.now();
-  // if (now % 10==0) {console.log(dt);}
+    // dt is the time in seconds since 
+    // the last frame 
+  
+  var canvasInstance = $("canvas");
+ // console.log("time to traverse is"+this.time);
+   var width = canvasInstance[0].width;
+   // recal distance = rate * time
+   
+   var desiredVelocity  = width/this.time;
+   var deltaX = desiredVelocity*dt;
+   this.x+=deltaX;
+   
+
 
 
 }
@@ -53,7 +65,7 @@ player = new Player();
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-var anEnemy = new Enemy();
+var anEnemy = new Enemy(10);
 //anEnemy.render();
 var allEnemies = [anEnemy];
 
