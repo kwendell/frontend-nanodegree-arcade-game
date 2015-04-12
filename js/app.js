@@ -1,16 +1,20 @@
 // Enemies our player must avoid
-var Enemy = function(timeToTraverse) {
+
+
+var Enemy = function(timeToTraverse,index) {
 ; // Variables applied to each of our instances go here,
     // we've provided one for you to get started
 
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
+   
     // set the initial enemay coordinates to
     // the botoom of the screen.
     this.x = 0;
     this.y = 0;
     this.time=timeToTraverse;
+    this.index=index;
    
 }
 
@@ -26,12 +30,18 @@ Enemy.prototype.update = function(dt) {
   var canvasInstance = $("canvas");
  // console.log("time to traverse is"+this.time);
    var width = canvasInstance[0].width;
+   var height = canvasInstance[0].height;
+   var numEnemies = allEnemies.length;
+   this.y=(height/numEnemies)*this.index;
+   
    // recal distance = rate * time
+
    
    var desiredVelocity  = width/this.time;
    var deltaX = desiredVelocity*dt;
    this.x+=deltaX;
-   
+   this.x=this.x % width;
+   //this.x=this.x & width;
 
 
 
@@ -40,6 +50,7 @@ Enemy.prototype.update = function(dt) {
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+   // console.log("Enemy::render");
 
     // var now = Date.now();
    //if (now % 10==0) {console.log("hello");}
@@ -65,9 +76,12 @@ player = new Player();
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-var anEnemy = new Enemy(10);
+
+
+var anEnemy = new Enemy(10,0);
+var anotherEnemy = new Enemy(7,1);
 //anEnemy.render();
-var allEnemies = [anEnemy];
+var allEnemies = [anEnemy, anotherEnemy];
 
 
 // This listens for key presses and sends the keys to your
