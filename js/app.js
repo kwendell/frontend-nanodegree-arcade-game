@@ -68,11 +68,17 @@ var Player = function() {
  // console.log("time to traverse is"+this.time);
   // var width = canvasInstance[0].width;
   // var height = canvasInstance[0].height;
+  var canvasInstance = $("canvas");
     this.x=0;
     this.y=0;
+    this.imageWidth = 110;
+    this.imageHeight =171;
 }
 
 Player.prototype.update = function(dt) {
+    var canvasInstance = $("canvas");
+    this.x=canvasInstance[0].width/2-this.imageWidth/2;
+    this.y=canvasInstance[0].height-this.imageHeight;
 
 }
 Player.prototype.render = function() {
