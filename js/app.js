@@ -8,7 +8,7 @@ var Enemy = function(timeToTraverse,index) {
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
-   
+
     // set the initial enemay coordinates to
     // the botoom of the screen.
     this.x = 0;
@@ -32,7 +32,7 @@ Enemy.prototype.update = function(dt) {
    var width = canvasInstance[0].width;
    var height = canvasInstance[0].height;
    var numEnemies = allEnemies.length;
-   this.y=(height/numEnemies)*this.index;
+   //this.y=(height)*this.index;
    
    // recal distance = rate * time
 
@@ -49,7 +49,10 @@ Enemy.prototype.update = function(dt) {
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    
+   ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+
+
    // console.log("Enemy::render");
 
     // var now = Date.now();
@@ -61,6 +64,12 @@ Enemy.prototype.render = function() {
 // a handleInput() method.
 var Player = function() {
     this.sprite='images/char-boy.png';
+   // var canvasInstance = $("canvas");
+ // console.log("time to traverse is"+this.time);
+  // var width = canvasInstance[0].width;
+  // var height = canvasInstance[0].height;
+    this.x=0;
+    this.y=0;
 }
 
 Player.prototype.update = function(dt) {
@@ -70,12 +79,14 @@ Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x,this.y);
 }
 
-player = new Player();
 
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
+
+var thePlayer = new Player();
+var player = thePlayer;
 
 
 var anEnemy = new Enemy(10,0);
