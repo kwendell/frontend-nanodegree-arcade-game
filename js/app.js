@@ -104,6 +104,10 @@ Player.prototype.handleInput = function(keyCode) {
     } else if (keyCode=="right") {
        
         this.x+=505/5;
+        if (this.x+101>505) {
+
+        this.x=this.x-505;
+       }
 
     } else if (keyCode=="up") {
      
