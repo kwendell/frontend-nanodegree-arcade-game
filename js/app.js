@@ -15,6 +15,7 @@ var Enemy = function(timeToTraverse,index) {
     this.y = 0;
     this.time=timeToTraverse;
     this.index=index;
+    this.enemyHeight = 171;
    
 }
 
@@ -30,16 +31,11 @@ Enemy.prototype.update = function(dt) {
   var canvasInstance = $("canvas");
  // console.log("time to traverse is"+this.time);
    var width = canvasInstance[0].width;
-   var height = canvasInstance[0].height;
-   var numEnemies = allEnemies.length;
-   //this.y=(height)*this.index;
-   
-   // recal distance = rate * time
-
    
    var desiredVelocity  = width/this.time;
    var deltaX = desiredVelocity*dt;
    this.x+=deltaX;
+   // wrap the movement when it goes off-screen.
    this.x=this.x % width;
    //this.x=this.x & width;
 
@@ -85,6 +81,12 @@ Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x,this.y);
 }
 
+Player.prototype.handleInput = function(keyCode) {
+    console.log("Handl input");
+
+}
+
+
 
 
 // Now instantiate your objects.
@@ -96,7 +98,7 @@ var player = thePlayer;
 
 
 var anEnemy = new Enemy(10,0);
-var anotherEnemy = new Enemy(7,1);
+var anotherEnemy = new Enemy(6,1);
 //anEnemy.render();
 var allEnemies = [anEnemy, anotherEnemy];
 
@@ -111,5 +113,6 @@ document.addEventListener('keyup', function(e) {
         40: 'down'
     };
 
+    
     player.handleInput(allowedKeys[e.keyCode]);
 });
