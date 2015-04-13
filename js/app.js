@@ -64,17 +64,23 @@ var Player = function() {
  // console.log("time to traverse is"+this.time);
   // var width = canvasInstance[0].width;
   // var height = canvasInstance[0].height;
-  var canvasInstance = $("canvas");
-    this.x=0;
-    this.y=0;
+ 
+   
     this.imageWidth = 110;
     this.imageHeight =171;
+
+   
+    // k2 todo, use model to access canvas dimensions
+     this.x=505/2-this.imageWidth/2;
+    this.y=606-this.imageHeight;
+
+
 }
 
 Player.prototype.update = function(dt) {
+
     var canvasInstance = $("canvas");
-    this.x=canvasInstance[0].width/2-this.imageWidth/2;
-    this.y=canvasInstance[0].height-this.imageHeight;
+   
 
 }
 Player.prototype.render = function() {
@@ -82,7 +88,24 @@ Player.prototype.render = function() {
 }
 
 Player.prototype.handleInput = function(keyCode) {
-    console.log("Handl input");
+  
+    if (keyCode=="left") {
+      
+       //k2 todo use singleton to access tile dimnsions
+       this.x-=505/5;
+
+    } else if (keyCode=="right") {
+       
+        this.x+=505/5;
+
+    } else if (keyCode=="up") {
+     
+        this.y-=606/5;
+
+    } else if (keyCode=="down") {
+        
+        this.y+=606/5;
+    }
 
 }
 
