@@ -71,7 +71,7 @@ var Player = function() {
 
    
     // k2 todo, use model to access canvas dimensions
-     this.x=505/2-this.imageWidth/2;
+     this.x=505/2-101/2;
     this.y=606-this.imageHeight;
 
 
@@ -90,9 +90,16 @@ Player.prototype.render = function() {
 Player.prototype.handleInput = function(keyCode) {
   
     if (keyCode=="left") {
-      
+       
        //k2 todo use singleton to access tile dimnsions
+      
        this.x-=505/5;
+       
+       if (this.x<0) {
+
+        this.x=505+this.x;
+       }
+      
 
     } else if (keyCode=="right") {
        
