@@ -5,7 +5,7 @@
 //canvasHeight=606;
 //  Rectantgle prototype constructor
 var Rectangle = function(x,y,width,height) {
-    console.log("calling rectangle constructor");
+   
     this.x=x;
     this.y=y;
     this.width=width;
@@ -13,6 +13,11 @@ var Rectangle = function(x,y,width,height) {
 }
 Rectangle.prototype.setX = function(x) {
     this.x=x;
+   
+}
+
+Rectangle.prototype.setY = function(y) {
+    this.y=y;
    
 }
 Rectangle.prototype.containsPoint= function(x,y) {
@@ -32,24 +37,15 @@ Rectangle.prototype.intersects= function(otherRectangle) {
 
 }
 
-var Enemy = function(timeToTraverse,index) {
+var Enemy = function(timeToTraverse) {
  // Variables applied to each of our instances go here,
     // we've provided one for you to get started
 
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
-
-
-    // set the initial enemay coordinates to
-    // the botoom of the screen.
-    this.x = 0;
-    this.y = 0;
     this.time=timeToTraverse;
-    this.index=index;
-    this.height = 171;
-    this.width = 101;
-    this.rectangle = new Rectangle(this.x,this.y,this.width,this.height);
+    this.rectangle = new Rectangle(0,0,101,171);
    
 }
 
@@ -57,32 +53,20 @@ var Enemy = function(timeToTraverse,index) {
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function(dt) {
    
-  
- // console.log("time to traverse is"+this.time);
-   var width = canvasWidth;//canvasInstance[0].width;
-   
-   var desiredVelocity  = width/this.time;
+   var desiredVelocity  = canvasWidth/this.time;
    var deltaX = desiredVelocity*dt;
-   this.x+=deltaX;
+   var x = this.rectangle.x;
+   x+=deltaX;
    // wrap the movement when it goes off-screen.
-   this.x=this.x % width;
-
-  // console.log(this.rectangle);
-   // update rectantgle
-   //this.rectangle.setLocation(this.rectangle,this.x,this.y);
-   //this.x=this.x & width;
-
-
-
+   x=x % canvasWidth;
+   this.rectangle.setX(x);
 }
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
     
-   ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+   ctx.drawImage(Resources.get(this.sprite), this.rectangle.x, this.rectangle.y);
 
-
-   //if (now % 10==0) {console.log("hello");}
 }
 
 // Now write your own player class
@@ -90,19 +74,12 @@ Enemy.prototype.render = function() {
 // a handleInput() method.
 var Player = function() {
     this.sprite='images/char-boy.png';
-   // var canvasInstance = $("canvas");
- // console.log("time to traverse is"+this.time);
-  // var width = canvasInstance[0].width;
-  // var height = canvasInstance[0].height;
- 
-   
-    this.width = 110;
-    this.height =171;
-
-   
+    var width = 110;
+    var height =171;
     // k2 todo, use model to access canvas dimensions
-    this.x=505/2-101/2;
-    this.y=606-this.height;
+    var x=505/2-101/2;
+    var y=606-height;
+	this.rectangle = new Rectangle(x,y,width,height);
 
 
 }
@@ -114,38 +91,37 @@ Player.prototype.update = function(dt) {
 
 }
 Player.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x,this.y);
+    ctx.drawImage(Resources.get(this.sprite), this.rectangle.x,this.rectangle.y);
 }
 
 Player.prototype.handleInput = function(keyCode) {
   
     if (keyCode=="left") {
+   
+       this.rectangle.x-=canvasWidth/5;
        
-       //k2 todo use singleton to access tile dimnsions
-      
-       this.x-=canvasWidth/5;
-       
-       if (this.x<0) {
+       if (this.rectangle.x<0) {
 
-        this.x=canvasWidth+this.x;
+        var x=canvasWidth+this.rectangle.x;
+		this.rectangle.x=x;
        }
       
 
     } else if (keyCode=="right") {
        
-        this.x+=canvasWidth/5;
-        if (this.x+101>canvasWidth) {
+        this.rectangle.x+=canvasWidth/5;
+        if (this.rectangle.x+101>canvasWidth) {
 
-        this.x=this.x-canvasWidth;
+        this.rectangle.x=this.rectangle.x-canvasWidth;
        }
 
     } else if (keyCode=="up") {
      
-        this.y-=canvasHeight/5;
+        this.rectangle.y-=canvasHeight/5;
 
     } else if (keyCode=="down") {
         
-        this.y+=canvasHeight/5;
+        this.rectangle.y+=canvasHeight/5;
     }
 
     // update the rectantle
