@@ -11,9 +11,9 @@ var Rectangle = function(x,y,width,height) {
     this.width=width;
     this.height=height;
 }
-Rectangle.prototype.setLocation = function(x,y) {
+Rectangle.prototype.setX = function(x) {
     this.x=x;
-    this.y=y;
+   
 }
 Rectangle.prototype.containsPoint= function(x,y) {
     var withinXBounds = (x<=this.x+this.width && x>=this.x) && (y<=this.y+this.height && y>=this.y);
@@ -33,7 +33,7 @@ Rectangle.prototype.intersects= function(otherRectangle) {
 }
 
 var Enemy = function(timeToTraverse,index) {
-; // Variables applied to each of our instances go here,
+ // Variables applied to each of our instances go here,
     // we've provided one for you to get started
 
     // The image/sprite for our enemies, this uses
@@ -58,7 +58,6 @@ var Enemy = function(timeToTraverse,index) {
 Enemy.prototype.update = function(dt) {
    
   
-  var canvasInstance = $("canvas");
  // console.log("time to traverse is"+this.time);
    var width = canvasWidth;//canvasInstance[0].width;
    
