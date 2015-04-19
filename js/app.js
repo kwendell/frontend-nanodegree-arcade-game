@@ -2,7 +2,7 @@
 /*
  * the Model prototype will be used to maintain
  * all information to execute the game like
- * game state.
+ * game state and canvas dimension.
  */
 var Model = function() {
     this.state="playing";
@@ -17,6 +17,10 @@ Model.prototype.getState = function() {
 Model.prototype.setState = function(state) {
     this.state=state;
 }
+/*
+ * Wrap the model in a Singleton f
+ */
+
 var Singleton = (function () {
     var instance;
  
@@ -89,6 +93,8 @@ var Enemy = function(timeToTraverse) {
     this.sprite = 'images/enemy-bug.png';
     this.time=timeToTraverse;
     this.rectangle = new Rectangle(0,0,101,171);
+    Enemy.instanceCounter++;
+   
    
 }
 
@@ -113,6 +119,13 @@ Enemy.prototype.render = function() {
  
    ctx.drawImage(Resources.get(this.sprite), this.rectangle.x, this.rectangle.y);
 }
+/*
+ * Add instance counter at class scope 
+ * to keep track of number of enemies.   This
+ * is used to set the y-coordinate in the 
+ * enemy constructor.
+ */
+Enemy.instanceCounter = 0;
 
 
 
@@ -121,16 +134,16 @@ Enemy.prototype.render = function() {
 // a handleInput() method.
 var Player = function() {
     this.sprite='images/char-boy.png';
-    var width = 110;
-    var height =171;
+    this.width = 101;
+    this.height =171;
     // k2 todo, use model to access canvas dimensions
     
     
-    var x=Singleton.getInstance().canvasWidth/2-101/2;
-    var y=Singleton.getInstance().canvasHeight-height;
-	this.rectangle = new Rectangle(x,y,width,height);
+    var x=Singleton.getInstance().canvasWidth/2-this.width/2;
+    var y=Singleton.getInstance().canvasHeight-this.height;
+	this.rectangle = new Rectangle(x,y,this.width,this.height);
     this.dt=0;
-    this.timeToFade = 3.0;
+    this.timeToFade = 2.0;
     this.currentAlpha = 1.0;
     
 
