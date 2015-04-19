@@ -7,6 +7,9 @@
 var Model = function() {
     this.state="playing";
     this.numberOfLives = 3;
+    var canvasInstance = $("canvas")[0];
+    this.canvasWidth=canvasInstance.width;
+    this.canvasHeight=canvasInstance.height;
 }
 Model.prototype.getState = function() {
     return this.state;
@@ -121,8 +124,10 @@ var Player = function() {
     var width = 110;
     var height =171;
     // k2 todo, use model to access canvas dimensions
-    var x=505/2-101/2;
-    var y=606-height;
+    
+    
+    var x=Singleton.getInstance().canvasWidth/2-101/2;
+    var y=Singleton.getInstance().canvasHeight-height;
 	this.rectangle = new Rectangle(x,y,width,height);
     this.dt=0;
     this.timeToFade = 3.0;
