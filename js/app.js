@@ -2,6 +2,7 @@
 //}
 var Model = function() {
     this.state="playing";
+    this.numberOfLives = 3;
 }
 Model.prototype.getState = function() {
     return this.state;
@@ -131,7 +132,14 @@ Player.prototype.update = function(dt) {
     for (var i=0;i<allEnemies.length;i++)  {
         if (this.rectangle.intersects(allEnemies[i].rectangle)) {
 
-            Singleton.getInstance().setState("killed");
+           
+            if (Singleton.getInstance().getState()!="killed") {
+            Singleton.getInstance().numberOfLives--;
+             Singleton.getInstance().setState("killed");
+            }
+            if (Singleton.getInstance().numberOfLives==0) {
+                console.log("GAME OVER");
+            }
         }
     }
 
