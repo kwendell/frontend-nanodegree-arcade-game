@@ -1,3 +1,35 @@
+//
+//}
+var Model = function() {
+    this.state="playing";
+}
+Model.prototype.getState = function() {
+    return this.state;
+}
+Model.prototype.setState = function(state) {
+    this.state=state;
+}
+var Singleton = (function () {
+    var instance;
+ 
+    function createInstance() {
+        var object = new Model();
+        return object;
+    }
+ 
+    return {
+        getInstance: function () {
+            if (!instance) {
+                instance = createInstance();
+            }
+            return instance;
+        }
+    };
+})();
+
+
+
+
 // Enemies our player must avoid
 // Model prototype constructor
 
@@ -59,15 +91,19 @@ Enemy.prototype.update = function(dt) {
    x+=deltaX;
    // wrap the movement when it goes off-screen.
    x=x % canvasWidth;
-   this.rectangle.setX(x);
+   // stop the enemies if a player died
+   if (Singleton.getInstance().getState()!="killed") {
+      this.rectangle.setX(x);
+   }
 }
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
-    
+ 
    ctx.drawImage(Resources.get(this.sprite), this.rectangle.x, this.rectangle.y);
-
 }
+
+
 
 // Now write your own player class
 // This class requires an update(), render() and
@@ -80,22 +116,53 @@ var Player = function() {
     var x=505/2-101/2;
     var y=606-height;
 	this.rectangle = new Rectangle(x,y,width,height);
+    this.dt=0;
+    this.timeToFade = 3.0;
+    this.currentAlpha = 1.0;
+    
 
 
 }
 
 Player.prototype.update = function(dt) {
+   // console.log(Singleton.getInstance().getState());
+    //console.log(dt);
+    this.dt=dt;
+    for (var i=0;i<allEnemies.length;i++)  {
+        if (this.rectangle.intersects(allEnemies[i].rectangle)) {
 
-   
+            Singleton.getInstance().setState("killed");
+        }
+    }
 
+  
+
+    
+    
 
 }
 Player.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.rectangle.x,this.rectangle.y);
+    // If the player has a collision, sat the opacity 
+     if (Singleton.getInstance().getState()=="killed")  {
+     //   console.log(this.dt);
+        ctx.save();
+        this.currentAlpha = this.currentAlpha - (this.dt/this.timeToFade);
+        if (this.currentAlpha>0) {
+        ctx.globalAlpha=this.currentAlpha;
+        
+        ctx.drawImage(Resources.get(this.sprite), this.rectangle.x,this.rectangle.y); 
+        }
+        ctx.restore();
+        
+    } else {
+        ctx.drawImage(Resources.get(this.sprite), this.rectangle.x,this.rectangle.y); 
+    }
+
+    
 }
 
 Player.prototype.handleInput = function(keyCode) {
-  
+  if (Singleton.getInstance().getState()!="killed") {
     if (keyCode=="left") {
    
        this.rectangle.x-=canvasWidth/5;
@@ -123,6 +190,8 @@ Player.prototype.handleInput = function(keyCode) {
         
         this.rectangle.y+=canvasHeight/5;
     }
+
+}
 
     // update the rectantle
 
