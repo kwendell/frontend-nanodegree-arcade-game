@@ -151,6 +151,14 @@ Player.prototype.render = function() {
         ctx.globalAlpha=this.currentAlpha;
         
         ctx.drawImage(Resources.get(this.sprite), this.rectangle.x,this.rectangle.y); 
+        } else {
+            Singleton.getInstance().setState("playing");
+            this.currentAlpha=1.0;
+             var width = 110;
+             var height =171;
+             var x=505/2-101/2;
+             var y=606-height;
+             this.rectangle = new Rectangle(x,y,width,height);
         }
         ctx.restore();
         
