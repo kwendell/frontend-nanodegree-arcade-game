@@ -145,7 +145,7 @@ var Player = function() {
     
     var x=Singleton.getInstance().canvasWidth/2-this.width/2;
     var y=Singleton.getInstance().canvasHeight-this.height;
-	this.rectangle = new Rectangle(x,y-41,this.width,this.height);
+	this.rectangle = new Rectangle(x,y-44,this.width,this.height);
     this.dt=0;
     this.timeToFade = 2.0;
     this.currentAlpha = 1.0;
@@ -197,20 +197,19 @@ Player.prototype.render = function() {
             Singleton.getInstance().setState("playing");
             // reset the position
             this.rectangle.setX(Singleton.getInstance().canvasWidth/2-this.width/2);
-            this.rectangle.setY(Singleton.getInstance().canvasHeight-this.height-41);
+            this.rectangle.setY(Singleton.getInstance().canvasHeight-this.height-44);
         }
         //restore the context
         ctx.restore();
     } else {
-console.log("not killed");
         Singleton.getInstance().setState("playing");
         this.currentAlpha=1.0;
            
         //var x=Singleton.getInstance().canvasWidth/2-this.width/2;
-        //var y=Singleton.getInstance().canvasHeight-this.height-41;
+        //var y=Singleton.getInstance().canvasHeight-this.height-44;
          ctx.drawImage(Resources.get(this.sprite), this.rectangle.x,this.rectangle.y); 
-             //this.rectangle = new Rectangle(x,y-41,this.width,this.height);
-      //  this.rectangle = new Rectangle(x,y-41,this.width,this.width);
+             //this.rectangle = new Rectangle(x,y-44,this.width,this.height);
+      //  this.rectangle = new Rectangle(x,y-44,this.width,this.width);
     }
       
         
@@ -244,9 +243,10 @@ Player.prototype.handleInput = function(keyCode) {
 
     } else if (keyCode=="up") {
      
-        this.rectangle.y-=canvasHeight/5;
+        this.rectangle.y-=canvasHeight/6;
         if (this.rectangle.y<0)  {
             Singleton.getInstance().setState("made it");
+			console.log(this.rectangle.y);
           //  var column = 5 - Singleton.getInstance().canvasWidth/(this.rectangle.x+this.rectangle.width);
             //column = column.toFixed(0);
             var columnWidth = Singleton.getInstance().canvasWidth/5;
@@ -260,8 +260,14 @@ Player.prototype.handleInput = function(keyCode) {
         }
 
     } else if (keyCode=="down") {
-        
-        this.rectangle.y+=canvasHeight/5;
+      //  var updatedY = this.rectangle+canvasHeight/6;
+		//this.rectangle.y= Math.min(updatedY,canvasHeight-44);
+		var newY = this.rectangle.y+canvasHeight/6;
+		if (newY+44<canvasHeight) {
+          this.rectangle.y=newY;
+	    }
+	   console.log(this.rectangle.y);
+	   
     }
 
 }
@@ -286,7 +292,7 @@ var anotherEnemy = new Enemy(4,0);
 var add = new Enemy(5,1);
 var yetAnotherEnemy = new Enemy(5,1);
 //anEnemy.render();
-var allEnemies = [anEnemy, anotherEnemy,add];
+var allEnemies = [anEnemy];
 
 
 // This listens for key presses and sends the keys to your
