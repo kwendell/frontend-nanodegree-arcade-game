@@ -201,7 +201,10 @@ Player.prototype.render = function() {
         }
         //restore the context
         ctx.restore();
-    } else {
+    } else if(Singleton.getInstance().getState()=="made it") {
+	//  console.log("made it state in Player::render");
+	}
+	else {
         Singleton.getInstance().setState("playing");
         this.currentAlpha=1.0;
            
@@ -247,10 +250,7 @@ Player.prototype.handleInput = function(keyCode) {
         if (this.rectangle.y<0)  {
             Singleton.getInstance().setState("made it");
 			this.rectangle.y=0;
-		//	console.log(this.rectangle.y);
-			
-         
-            // this.rectangle.setY(Singleton.getInstance().canvasHeight-this.height);
+		
         }
 
     } else if (keyCode=="down") {
