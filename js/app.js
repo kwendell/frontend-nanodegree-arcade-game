@@ -246,16 +246,10 @@ Player.prototype.handleInput = function(keyCode) {
         this.rectangle.y-=canvasHeight/6;
         if (this.rectangle.y<0)  {
             Singleton.getInstance().setState("made it");
-			console.log(this.rectangle.y);
-          //  var column = 5 - Singleton.getInstance().canvasWidth/(this.rectangle.x+this.rectangle.width);
-            //column = column.toFixed(0);
-            var columnWidth = Singleton.getInstance().canvasWidth/5;
-           // console.log((this.rectangle.x+this.rectangle.width)/columnWidth);
-            
-            /*
-             * reset the player position.
-             */
-             //this.rectangle.setX(Singleton.getInstance().canvasWidth/2 - this.width/2);
+			this.rectangle.y=0;
+		//	console.log(this.rectangle.y);
+			
+         
             // this.rectangle.setY(Singleton.getInstance().canvasHeight-this.height);
         }
 
@@ -266,7 +260,7 @@ Player.prototype.handleInput = function(keyCode) {
 		if (newY+44<canvasHeight) {
           this.rectangle.y=newY;
 	    }
-	   console.log(this.rectangle.y);
+	  
 	   
     }
 
