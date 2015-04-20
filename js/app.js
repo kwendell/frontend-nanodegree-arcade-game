@@ -88,12 +88,16 @@ Rectangle.prototype.intersects= function(otherRectangle) {
  * value to set the speed.
  */
 
-var Enemy = function(timeToTraverse) {
+var Enemy = function(timeToTraverse,row) {
+    
+   
 
     this.sprite = 'images/enemy-bug.png';
-    this.time=timeToTraverse;
-    this.rectangle = new Rectangle(0,0,101,171);
+    this.time=timeToTraverse*2;
+    
+    this.rectangle = new Rectangle(98*Enemy.instanceCounter*2,row*77+94,98,77);
     Enemy.instanceCounter++;
+  
    
    
 }
@@ -135,13 +139,13 @@ Enemy.instanceCounter = 0;
 var Player = function() {
     this.sprite='images/char-boy.png';
     this.width = 101;
-    this.height =171;
+    this.height =89;
     // k2 todo, use model to access canvas dimensions
     
     
     var x=Singleton.getInstance().canvasWidth/2-this.width/2;
     var y=Singleton.getInstance().canvasHeight-this.height;
-	this.rectangle = new Rectangle(x,y,this.width,this.height);
+	this.rectangle = new Rectangle(x,y-41,this.width,this.height);
     this.dt=0;
     this.timeToFade = 2.0;
     this.currentAlpha = 1.0;
@@ -161,9 +165,11 @@ Player.prototype.update = function(dt) {
             if (Singleton.getInstance().getState()!="killed") {
             Singleton.getInstance().numberOfLives--;
              Singleton.getInstance().setState("killed");
+             //console.log(this.rectangle.x+", "+this.rectangle.y.toFixed(0)+", "+this.rectangle.width+", "+ this.rectangle.height);
+              //sconsole.log(allEnemies[i].rectangle.x.toFixed(0)+", "+allEnemies[i].rectangle.y.toFixed(0)+", "+allEnemies[i].rectangle.width+", "+ allEnemies[i].rectangle.height);
             }
             if (Singleton.getInstance().numberOfLives==0) {
-                console.log("GAME OVER");
+                Singleton.getInstance().setState("gameOver");
             }
         }
     }
@@ -176,28 +182,41 @@ Player.prototype.update = function(dt) {
 }
 Player.prototype.render = function() {
     // If the player has a collision, sat the opacity 
-     if (Singleton.getInstance().getState()=="killed")  {
-     //   console.log(this.dt);
+   // console.log(Singleton.getInstance().getState());
+ //  console.log(Singleton.getInstance().getState());
+// console.log(Singleton.getInstance().getState());
+    if (Singleton.getInstance().getState()=="killed")  {
+        // save the context
         ctx.save();
         this.currentAlpha = this.currentAlpha - (this.dt/this.timeToFade);
+        // draw the transparent player dying
         if (this.currentAlpha>0) {
-        ctx.globalAlpha=this.currentAlpha;
-        
-        ctx.drawImage(Resources.get(this.sprite), this.rectangle.x,this.rectangle.y); 
+             ctx.globalAlpha=this.currentAlpha;
+             ctx.drawImage(Resources.get(this.sprite), this.rectangle.x,this.rectangle.y); 
         } else {
             Singleton.getInstance().setState("playing");
-            this.currentAlpha=1.0;
-             var width = 110;
-             var height =171;
-             var x=505/2-101/2;
-             var y=606-height;
-             this.rectangle = new Rectangle(x,y,width,height);
+            // reset the position
+            this.rectangle.setX(Singleton.getInstance().canvasWidth/2-this.width/2);
+            this.rectangle.setY(Singleton.getInstance().canvasHeight-this.height-41);
         }
+        //restore the context
         ctx.restore();
-        
     } else {
-        ctx.drawImage(Resources.get(this.sprite), this.rectangle.x,this.rectangle.y); 
+console.log("not killed");
+        Singleton.getInstance().setState("playing");
+        this.currentAlpha=1.0;
+           
+        //var x=Singleton.getInstance().canvasWidth/2-this.width/2;
+        //var y=Singleton.getInstance().canvasHeight-this.height-41;
+         ctx.drawImage(Resources.get(this.sprite), this.rectangle.x,this.rectangle.y); 
+             //this.rectangle = new Rectangle(x,y-41,this.width,this.height);
+      //  this.rectangle = new Rectangle(x,y-41,this.width,this.width);
     }
+      
+        
+    // else {
+       
+    //}
 
     
 }
@@ -226,6 +245,19 @@ Player.prototype.handleInput = function(keyCode) {
     } else if (keyCode=="up") {
      
         this.rectangle.y-=canvasHeight/5;
+        if (this.rectangle.y<0)  {
+            Singleton.getInstance().setState("made it");
+          //  var column = 5 - Singleton.getInstance().canvasWidth/(this.rectangle.x+this.rectangle.width);
+            //column = column.toFixed(0);
+            var columnWidth = Singleton.getInstance().canvasWidth/5;
+           // console.log((this.rectangle.x+this.rectangle.width)/columnWidth);
+            
+            /*
+             * reset the player position.
+             */
+             //this.rectangle.setX(Singleton.getInstance().canvasWidth/2 - this.width/2);
+            // this.rectangle.setY(Singleton.getInstance().canvasHeight-this.height);
+        }
 
     } else if (keyCode=="down") {
         
@@ -249,10 +281,12 @@ var thePlayer = new Player();
 var player = thePlayer;
 
 
-var anEnemy = new Enemy(10,0);
-var anotherEnemy = new Enemy(6,1);
+var anEnemy = new Enemy(4,0);
+var anotherEnemy = new Enemy(4,0);
+var add = new Enemy(5,1);
+var yetAnotherEnemy = new Enemy(5,1);
 //anEnemy.render();
-var allEnemies = [anEnemy, anotherEnemy];
+var allEnemies = [anEnemy, anotherEnemy,add];
 
 
 // This listens for key presses and sends the keys to your
