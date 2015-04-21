@@ -90,15 +90,16 @@ Rectangle.prototype.intersects= function(otherRectangle) {
 
 var Enemy = function(timeToTraverse,row) {
     
-   
+   this.width=98;
+   this.height=77;
 
     this.sprite = 'images/enemy-bug.png';
     this.time=timeToTraverse*2;
     
-    this.rectangle = new Rectangle(98*Enemy.instanceCounter*2,row*77+94,98,77);
+    this.rectangle = new Rectangle(-this.width/2,row*this.height+94,this.width,this.height);
     Enemy.instanceCounter++;
   
-   
+   console.log("Enemy constructor");
    
 }
 
@@ -111,7 +112,10 @@ Enemy.prototype.update = function(dt) {
    var x = this.rectangle.x;
    x+=deltaX;
    // wrap the movement when it goes off-screen.
-   x=x % canvasWidth;
+   //x=x % canvasWidth;
+   if (x>canvasWidth) {
+    x=-98;
+   }
    // stop the enemies if a player died
    if (Singleton.getInstance().getState()!="killed") {
       this.rectangle.setX(x);
@@ -198,21 +202,29 @@ Player.prototype.render = function() {
             // reset the position
             this.rectangle.setX(Singleton.getInstance().canvasWidth/2-this.width/2);
             this.rectangle.setY(Singleton.getInstance().canvasHeight-this.height-44);
+            this.currentAlpha=1.0;
         }
         //restore the context
         ctx.restore();
-    } else if(Singleton.getInstance().getState()=="made it") {
-	//  console.log("made it state in Player::render");
+
+    } else if (Singleton.getInstance().getState()=="made it") {
+       // console.log("made it");
+  //  } else {
+
+
+    
 	}
 	else {
+
         Singleton.getInstance().setState("playing");
         this.currentAlpha=1.0;
            
-        //var x=Singleton.getInstance().canvasWidth/2-this.width/2;
-        //var y=Singleton.getInstance().canvasHeight-this.height-44;
+
+       
+
+
          ctx.drawImage(Resources.get(this.sprite), this.rectangle.x,this.rectangle.y); 
-             //this.rectangle = new Rectangle(x,y-44,this.width,this.height);
-      //  this.rectangle = new Rectangle(x,y-44,this.width,this.width);
+
     }
       
         
