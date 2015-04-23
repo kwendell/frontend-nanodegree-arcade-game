@@ -10,12 +10,19 @@ var Model = function() {
     var canvasInstance = $("canvas")[0];
     this.canvasWidth=canvasInstance.width;
     this.canvasHeight=canvasInstance.height;
+    this.value=0;
 }
 Model.prototype.getState = function() {
     return this.state;
 }
 Model.prototype.setState = function(state) {
     this.state=state;
+}
+Model.prototype.setValue = function(value) {
+   this.value=value;
+}
+Model.prototype.getValue = function() {
+  return this.value;
 }
 /*
  * Wrap the model in a Singleton f
@@ -84,29 +91,41 @@ Rectangle.prototype.intersects= function(otherRectangle) {
 
 }
 
+
+
 /* The Enemy construct takes a 'timeToTraverse'
  * value to set the speed.
  */
-
+ 
+var tempWidth = 0;
 var Enemy = function(timeToTraverse,row) {
-    
-   this.width=98;
-   this.height=77;
+  this.SPACE=60;
+  this.width=98;
+  this.height=77;
+ 
 
-    this.sprite = 'images/enemy-bug.png';
+    this.sprite = 'images/enemy-trump.png';
     this.time=timeToTraverse*2;
+
+   
     
-    this.rectangle = new Rectangle(-this.width/2,row*this.height+94,this.width,this.height);
+    //this.rectangle = new Rectangle(-this.width/2,row*this.height+this.SPACE,this.width,this.height);
+    this.rectangle = new Rectangle(-this.width/2,row*this.height+this.SPACE,this.width,this.height);
     Enemy.instanceCounter++;
   
-   console.log("Enemy constructor");
+   
    
 }
 
+
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
+
 Enemy.prototype.update = function(dt) {
-   
+   // defer setting rectangle dimensions until onLoad happens.
+
+  
+ 
    var desiredVelocity  = canvasWidth/this.time;
    var deltaX = desiredVelocity*dt;
    var x = this.rectangle.x;
@@ -124,7 +143,7 @@ Enemy.prototype.update = function(dt) {
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
- 
+ //console.log("enemy render");
    ctx.drawImage(Resources.get(this.sprite), this.rectangle.x, this.rectangle.y);
 }
 /*
@@ -163,7 +182,7 @@ Player.prototype.update = function(dt) {
     //console.log(dt);
     this.dt=dt;
     for (var i=0;i<allEnemies.length;i++)  {
-        if (this.rectangle.intersects(allEnemies[i].rectangle)) {
+        if (this.rectangle.intersects(allEnemies[i].rectangle) && Singleton.getInstance().getState()!="made it") {
 
            
             if (Singleton.getInstance().getState()!="killed") {
@@ -208,9 +227,9 @@ Player.prototype.render = function() {
         ctx.restore();
 
     } else if (Singleton.getInstance().getState()=="made it") {
-       // console.log("made it");
-  //  } else {
-
+      // draw a star at the last x-coord, 
+         
+      ctx.drawImage(Resources.get("images/Star.png"),this.rectangle.x,this.rectangle.y);
 
     
 	}

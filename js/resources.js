@@ -20,6 +20,7 @@
              * loader on that image file
              */
             urlOrArr.forEach(function(url) {
+
                 _load(url);
             });
         } else {
@@ -52,6 +53,7 @@
                  * attempts to load this file in the future.
                  */
                 resourceCache[url] = img;
+
 
                 /* Once the image is actually loaded and properly cached,
                  * call all of the onReady() callbacks we have defined.
