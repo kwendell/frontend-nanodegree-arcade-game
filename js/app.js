@@ -166,9 +166,9 @@ var Player = function() {
     // k2 todo, use model to access canvas dimensions
     
     
-    var x=Singleton.getInstance().canvasWidth/2-this.width/2;
-    var y=Singleton.getInstance().canvasHeight-this.height;
-	  this.rectangle = new Rectangle(x,y-44,this.width,this.height);
+    this.startX=Singleton.getInstance().canvasWidth/2-this.width/2;
+    this.startY=Singleton.getInstance().canvasHeight-this.height-44;
+	  this.rectangle = new Rectangle(this.startX,this.startY,this.width,this.height);
     this.dt=0;
     this.timeToFade = 2.0;
     this.currentAlpha = 1.0;
@@ -178,9 +178,12 @@ var Player = function() {
 }
 
 Player.prototype.update = function(dt) {
-   // console.log(Singleton.getInstance().getState());
-    //console.log(dt);
+   
     this.dt=dt;
+    /*
+     * Check to see if the player has collided with any enemies.   If so,
+     * set the appropriate game state.
+     */
     for (var i=0;i<allEnemies.length;i++)  {
         if (this.rectangle.intersects(allEnemies[i].rectangle) && Singleton.getInstance().getState()!="made it") {
 
@@ -190,11 +193,16 @@ Player.prototype.update = function(dt) {
              Singleton.getInstance().setState("killed");
              //console.log(this.rectangle.x+", "+this.rectangle.y.toFixed(0)+", "+this.rectangle.width+", "+ this.rectangle.height);
               //sconsole.log(allEnemies[i].rectangle.x.toFixed(0)+", "+allEnemies[i].rectangle.y.toFixed(0)+", "+allEnemies[i].rectangle.width+", "+ allEnemies[i].rectangle.height);
-            }
+            
+              }
             if (Singleton.getInstance().numberOfLives==0) {
                 Singleton.getInstance().setState("gameOver");
             }
         }
+    }
+
+    if (Singleton.getInstance().getState()=="killed")  {
+
     }
 
   
@@ -204,15 +212,12 @@ Player.prototype.update = function(dt) {
 
 }
 Player.prototype.render = function() {
-    // If the player has a collision, sat the opacity 
-   // console.log(Singleton.getInstance().getState());
- //  console.log(Singleton.getInstance().getState());
-// console.log(Singleton.getInstance().getState());
+   
     if (Singleton.getInstance().getState()=="killed")  {
         // save the context
         ctx.save();
         this.currentAlpha = this.currentAlpha - (this.dt/this.timeToFade);
-        // draw the transparent player dying
+        // decrease the opacity to show player dying.
         if (this.currentAlpha>0) {
              ctx.globalAlpha=this.currentAlpha;
              ctx.drawImage(Resources.get(this.sprite), this.rectangle.x,this.rectangle.y); 
@@ -227,16 +232,15 @@ Player.prototype.render = function() {
         ctx.restore();
 
     } else if (Singleton.getInstance().getState()=="made it") {
-      // draw a star at the last x-coord, 
+      // draw a star at the player location that made it.
          
       ctx.drawImage(Resources.get("images/Star.png"),this.rectangle.x,this.rectangle.y);
 
       // draw the player in the starting position
-      // begin by setting the original position
-      var x=Singleton.getInstance().canvasWidth/2-this.width/2;
-      var y=Singleton.getInstance().canvasHeight-this.height-44;
-      this.rectangle.x=x;
-      this.rectangle.y=y;
+      
+      
+      this.rectangle.x=Singleton.getInstance().canvasWidth/2-this.width/2;
+      this.rectangle.y=Singleton.getInstance().canvasHeight-this.height-44;
       ctx.drawImage(Resources.get("images/char-boy.png"),this.rectangle.x,this.rectangle.y);
       Singleton.getInstance().setState("playing");
 
