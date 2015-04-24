@@ -97,7 +97,7 @@ Rectangle.prototype.intersects= function(otherRectangle) {
  * value to set the speed.
  */
  
-var tempWidth = 0;
+//var tempWidth = 0;
 var Enemy = function(timeToTraverse,row) {
   this.SPACE=60;
   this.width=98;
@@ -105,9 +105,9 @@ var Enemy = function(timeToTraverse,row) {
  
 
     this.sprite = 'images/enemy-trump.png';
-    this.time=timeToTraverse*2;
+    this.time=timeToTraverse;
 
-   
+
     
     //this.rectangle = new Rectangle(-this.width/2,row*this.height+this.SPACE,this.width,this.height);
     this.rectangle = new Rectangle(-this.width/2,row*this.height+this.SPACE,this.width,this.height);
@@ -162,13 +162,13 @@ Enemy.instanceCounter = 0;
 var Player = function() {
     this.sprite='images/char-boy.png';
     this.width = 101;
-    this.height =89;
+    this.height =88;
     // k2 todo, use model to access canvas dimensions
     
     
     var x=Singleton.getInstance().canvasWidth/2-this.width/2;
     var y=Singleton.getInstance().canvasHeight-this.height;
-	this.rectangle = new Rectangle(x,y-44,this.width,this.height);
+	  this.rectangle = new Rectangle(x,y-44,this.width,this.height);
     this.dt=0;
     this.timeToFade = 2.0;
     this.currentAlpha = 1.0;
@@ -230,6 +230,16 @@ Player.prototype.render = function() {
       // draw a star at the last x-coord, 
          
       ctx.drawImage(Resources.get("images/Star.png"),this.rectangle.x,this.rectangle.y);
+
+      // draw the player in the starting position
+      // begin by setting the original position
+      var x=Singleton.getInstance().canvasWidth/2-this.width/2;
+      var y=Singleton.getInstance().canvasHeight-this.height-44;
+      this.rectangle.x=x;
+      this.rectangle.y=y;
+      ctx.drawImage(Resources.get("images/char-boy.png"),this.rectangle.x,this.rectangle.y);
+      Singleton.getInstance().setState("playing");
+
 
     
 	}
