@@ -98,28 +98,20 @@ Rectangle.prototype.intersects= function(otherRectangle) {
  */
  
 //var tempWidth = 0;
-var Enemy = function(timeToTraverse,row) {
+var Enemy = function(x,y,width,height,imageUrl,timeToTraverse,row) {
   this.SPACE=60;
-  this.width=98;
-  this.height=77;
+  
  
 
-    this.sprite = 'images/enemy-trump.png';
-    this.time=timeToTraverse;
+  this.sprite = imageUrl;
+  this.time=timeToTraverse;
 
-
-    
-    //this.rectangle = new Rectangle(-this.width/2,row*this.height+this.SPACE,this.width,this.height);
-    this.rectangle = new Rectangle(-this.width/2,row*this.height+this.SPACE,this.width,this.height);
-    Enemy.instanceCounter++;
-  
-   
-   
+  this.rectangle = new Rectangle(x,y,width,height);
+  //this.rectangle=rectangle;
+  Enemy.instanceCounter++;
+ 
 }
 
-
-// Update the enemy's position, required method for game
-// Parameter: dt, a time delta between ticks
 
 Enemy.prototype.update = function(dt) {
    // defer setting rectangle dimensions until onLoad happens.
@@ -325,13 +317,16 @@ Player.prototype.handleInput = function(keyCode) {
 var thePlayer = new Player();
 var player = thePlayer;
 
+////this.rectangle = new Rectangle(-this.width,row*this.height+this.SPACE,this.width,this.height);
+//var rectangleTrump = new Rectangle(-80,1*80+60 ,80,101);
 
-var anEnemy = new Enemy(4,0);
-var anotherEnemy = new Enemy(4,0);
-var add = new Enemy(5,1);
-var yetAnotherEnemy = new Enemy(5,1);
+var trump = new Enemy(-80,1*80,80,101,'images/enemy-trump.png',4,0);
+var bug = new Enemy(-98+canvasWidth/2,1*80,98,77,'images/enemy-bug.png',4,0);
+
+//var bug = new Enemy('images/enemy-bug.png', 3,0);
+
 //anEnemy.render();
-var allEnemies = [anEnemy];
+var allEnemies = [trump,bug];
 
 
 // This listens for key presses and sends the keys to your
