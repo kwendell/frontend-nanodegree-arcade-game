@@ -224,8 +224,8 @@ Player.prototype.render = function() {
         } else {
             Singleton.getInstance().setState("playing");
             // reset the position
-            this.rectangle.setX(Singleton.getInstance().canvasWidth/2-this.width/2);
-            this.rectangle.setY(Singleton.getInstance().canvasHeight-this.height-44);
+            this.rectangle.setX(this.startX);
+            this.rectangle.setY(this.startY);
             this.currentAlpha=1.0;
         }
         //restore the context
