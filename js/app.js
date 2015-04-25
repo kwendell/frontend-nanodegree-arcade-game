@@ -320,13 +320,16 @@ var player = thePlayer;
 ////this.rectangle = new Rectangle(-this.width,row*this.height+this.SPACE,this.width,this.height);
 //var rectangleTrump = new Rectangle(-80,1*80+60 ,80,101);
 
-var trump = new Enemy(-80,1*80,80,101,'images/enemy-trump.png',4,0);
-var bug = new Enemy(-98+canvasWidth/2,1*80,98,77,'images/enemy-bug.png',4,0);
+var trump = new Enemy(-80,110-101/2,80,101,'images/enemy-trump.png',4,0);
+var bug = new Enemy(-98+canvasWidth/2,110-77/2,98,77,'images/enemy-bug.png',4,0);
+
+var bug2 = new Enemy(-98,240-77/2,98,77,'images/enemy-bug.png',5,0);
+var coulter = new Enemy(-87+canvasWidth/2,2*90,87,90,'images/enemy-coulter.png',5,0);
 
 //var bug = new Enemy('images/enemy-bug.png', 3,0);
 
 //anEnemy.render();
-var allEnemies = [trump,bug];
+var allEnemies = [trump,bug, bug2, coulter];
 
 
 // This listens for key presses and sends the keys to your
