@@ -96,11 +96,11 @@ var Engine = (function(global) {
      */
     function updateEntities(dt) {
         allEnemies.forEach(function(enemy) {
-        
+
             enemy.update(dt);
         });
          allRewards.forEach(function(reward) {
-           
+
             reward.update(dt);
         });
         player.update(dt);
@@ -165,7 +165,7 @@ var Engine = (function(global) {
         allRewards.forEach(function(reward) {
             reward.render();
         });
-        
+
         player.render();
     }
 
