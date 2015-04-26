@@ -96,27 +96,23 @@ Rectangle.prototype.intersects= function(otherRectangle) {
  
 //var tempWidth = 0;
 var Enemy = function(x,y,width,height,imageUrl,timeToTraverse,row) {
-  this.SPACE=60;
-  
  
-
   this.sprite = imageUrl;
   this.time=timeToTraverse;
 
   this.rectangle = new Rectangle(x,y,width,height);
-  //this.rectangle=rectangle;
-  Enemy.instanceCounter++;
+
  
 } 
+
+/*  Add class scoope variable for the Enemy width */
+Enemy.width=98;
 
 
 
 
 Enemy.prototype.update = function(dt) {
-   // defer setting rectangle dimensions until onLoad happens.
-
   
- 
    var desiredVelocity  = canvasWidth/this.time;
    var deltaX = desiredVelocity*dt;
    var x = this.rectangle.x;
@@ -124,7 +120,7 @@ Enemy.prototype.update = function(dt) {
    // wrap the movement when it goes off-screen.
    //x=x % canvasWidth;
    if (x>canvasWidth) {
-    x=-98;
+    x=-Enemy.width;
    }
    // stop the enemies if a player died
    if (Singleton.getInstance().getState()!="killed") {
@@ -139,13 +135,8 @@ Enemy.prototype.render = function() {
    ctx.drawImage(Resources.get(this.sprite), this.rectangle.x, this.rectangle.y);
  }
 }
-/*
- * Add instance counter at class scope 
- * to keep track of number of enemies.   This
- * is used to set the y-coordinate in the 
- * enemy constructor.
- */
-Enemy.instanceCounter = 0;
+
+
 
 
 
@@ -160,14 +151,21 @@ var Player = function() {
     
     
     this.startX=Singleton.getInstance().canvasWidth/2-this.width/2;
-    this.startY=Singleton.getInstance().canvasHeight-this.height-44;
+    this.startY=Singleton.getInstance().canvasHeight-this.height-this.height/2;
 	  this.rectangle = new Rectangle(this.startX,this.startY,this.width,this.height);
     this.dt=0;
+    // Parameters to fade the player when colliding.
     this.timeToFade = 2.0;
     this.currentAlpha = 1.0;
     
 
 
+}
+
+
+Player.prototype.resetPosition = function() {
+    this.rectangle.x=this.startX;//ingleton.getInstance().canvasWidth/2-this.width/2;
+      this.rectangle.y=this.startY;//Singleton.getInstance().canvasHeight-this.height;
 }
 
 Player.prototype.update = function(dt) {
@@ -184,8 +182,7 @@ Player.prototype.update = function(dt) {
             if (Singleton.getInstance().getState()!="killed" && Singleton.getInstance().getState()!="gameOver") {
             Singleton.getInstance().numberOfLives--;
              Singleton.getInstance().setState("killed");
-             //console.log(this.rectangle.x+", "+this.rectangle.y.toFixed(0)+", "+this.rectangle.width+", "+ this.rectangle.height);
-              //sconsole.log(allEnemies[i].rectangle.x.toFixed(0)+", "+allEnemies[i].rectangle.y.toFixed(0)+", "+allEnemies[i].rectangle.width+", "+ allEnemies[i].rectangle.height);
+            
             
               }
             if (Singleton.getInstance().numberOfLives==0) {
@@ -196,19 +193,10 @@ Player.prototype.update = function(dt) {
         }
     }
 
-    /*
-     *  Check to see if a reward was picked up.
-     */
-    
-
-    if (Singleton.getInstance().getState()=="killed")  {
-
-    }
-
   
 
     
-    
+ 
 
 }
 Player.prototype.render = function() {
@@ -217,15 +205,15 @@ Player.prototype.render = function() {
         // save the context
         ctx.save();
         this.currentAlpha = this.currentAlpha - (this.dt/this.timeToFade);
-        // decrease the opacity to show player dying.
+        // decrease the opacity to show player perishing.
         if (this.currentAlpha>0) {
              ctx.globalAlpha=this.currentAlpha;
              ctx.drawImage(Resources.get(this.sprite), this.rectangle.x,this.rectangle.y); 
         } else {
             Singleton.getInstance().setState("playing");
             // reset the position
-            this.rectangle.setX(this.startX);
-            this.rectangle.setY(this.startY);
+          
+            this.resetPosition();
             this.currentAlpha=1.0;
         }
         //restore the context
@@ -238,9 +226,11 @@ Player.prototype.render = function() {
 
       // draw the player in the starting position
       
-      
+      this.resetPosition();
+      /*
       this.rectangle.x=Singleton.getInstance().canvasWidth/2-this.width/2;
-      this.rectangle.y=Singleton.getInstance().canvasHeight-this.height-44;
+      this.rectangle.y=Singleton.getInstance().canvasHeight-this.height-this.height;
+      */
       ctx.drawImage(Resources.get("images/char-boy.png"),this.rectangle.x,this.rectangle.y);
       Singleton.getInstance().setState("playing");
 
@@ -251,10 +241,9 @@ Player.prototype.render = function() {
      }
 	   else {
 
-    //    Singleton.getInstance().setState("playing");
+   
         this.currentAlpha=1.0;
-
-         ctx.drawImage(Resources.get(this.sprite), this.rectangle.x,this.rectangle.y); 
+        ctx.drawImage(Resources.get(this.sprite), this.rectangle.x,this.rectangle.y); 
 
     }
   
@@ -325,18 +314,30 @@ var bug = new Enemy(-98+canvasWidth/2,110-77/2,98,77,'images/enemy-bug.png',4,0)
 
 var bug2 = new Enemy(-98,240-77/2,98,77,'images/enemy-bug.png',5,0);
 var coulter = new Enemy(-87+canvasWidth/2,2*90,87,90,'images/enemy-coulter.png',5,0);
+var allEnemies = [trump,bug, bug2, coulter];
 
 /* use prototype chaining 
  * to subclass an Enemy instance
- */;
-var reward = Object.create(coulter);
+ */
+ var rewardToBe = new Enemy(-87+canvasWidth/2,2*90,87,90,'images/Gem Blue.png',5,0);
+var reward = Object.create(rewardToBe);
 reward.sprite="images/Gem Blue.png";
+reward.rectangle.width=101;
+reward.rectangle.height=171;
+reward.rectangle.y=300;
 reward.update = function(dt) {
  // console.log("reward update function.");
- //this.render(dt);
+ this.sprite="images/Gem Blue.png";
+ this.rectangle.x=20;
+ this.rectangle.y=20;
+ this.render(dt);
 }
 reward.render = function(dt)  {
-  console.log("reward::render");
+  //console.log(this.sprite);
+  var img = new Image();
+  img.src="images/Gem Blue.png";
+   ctx.drawImage(img, 20,20);
+   //console.log(this.rectangle.x); 
 
 }
 
@@ -344,7 +345,7 @@ reward.render = function(dt)  {
 //var bug = new Enemy('images/enemy-bug.png', 3,0);
 
 //anEnemy.render();
-var allEnemies = [trump,bug, bug2, coulter];
+
 
 
 // This listens for key presses and sends the keys to your
