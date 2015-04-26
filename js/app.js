@@ -19,6 +19,9 @@ Model.prototype.getState = function() {
 Model.prototype.setState = function(state) {
     this.state=state;
 }
+Model.prototype.getCanvasWidth = function() {
+  return this.canvasWidth;
+}
 
 
 /*
@@ -106,7 +109,7 @@ var Enemy = function(x,y,width,height,imageUrl,timeToTraverse,row) {
 } 
 
 /*  Add class scoope variable for the Enemy width */
-Enemy.width=98;
+
 
 
 
@@ -120,7 +123,7 @@ Enemy.prototype.update = function(dt) {
    // wrap the movement when it goes off-screen.
    //x=x % canvasWidth;
    if (x>canvasWidth) {
-    x=-Enemy.width;
+    x=-this.rectangle.width;
    }
    // stop the enemies if a player died
    if (Singleton.getInstance().getState()!="killed") {
@@ -157,10 +160,13 @@ var Player = function() {
     // Parameters to fade the player when colliding.
     this.timeToFade = 2.0;
     this.currentAlpha = 1.0;
+    this.isInvincible = false;
+    this.timeToBeInvincible = 5;
     
 
 
 }
+
 
 
 Player.prototype.resetPosition = function() {
@@ -175,10 +181,12 @@ Player.prototype.update = function(dt) {
      * Check to see if the player has collided with any enemies.   If so,
      * set the appropriate game state.
      */
-    for (var i=0;i<allEnemies.length;i++)  {
-        if (this.rectangle.intersects(allEnemies[i].rectangle) && Singleton.getInstance().getState()!="made it") {
 
-           
+    //  console.log(allEnemies.length )
+    for (var i=0;i<allEnemies.length;i++)  {
+        if (this.rectangle.intersects(allEnemies[i].rectangle) && Singleton.getInstance().getState()!="made it" && this.isInvincible==false) {
+
+          
             if (Singleton.getInstance().getState()!="killed" && Singleton.getInstance().getState()!="gameOver") {
             Singleton.getInstance().numberOfLives--;
              Singleton.getInstance().setState("killed");
@@ -192,11 +200,22 @@ Player.prototype.update = function(dt) {
             }
         }
     }
+    for (var j=0;j<allRewards.length;j++)  {
 
-  
+      if (this.rectangle.intersects(allRewards[j].rectangle) && Singleton.getInstance().getState()!="made it") {
+        this.isInvincible=true;
+      
+      }
 
-    
- 
+    }
+
+    if (this.isInvincible)  {
+      this.timeToBeInvincible-=dt;
+      if (this.timeToBeInvincible <= 0) {
+        this.isInvincible=false;
+        this.timeToBeInvincible=5;
+      }
+    }
 
 }
 Player.prototype.render = function() {
@@ -292,7 +311,6 @@ Player.prototype.handleInput = function(keyCode) {
 
 }
 
-    // update the rectantle
 
 }
 
@@ -303,48 +321,68 @@ Player.prototype.handleInput = function(keyCode) {
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 
-var thePlayer = new Player();
-var player = thePlayer;
+//var thePlayer = new Player();
+var player = new Player();
 
 ////this.rectangle = new Rectangle(-this.width,row*this.height+this.SPACE,this.width,this.height);
 //var rectangleTrump = new Rectangle(-80,1*80+60 ,80,101);
 
-var trump = new Enemy(-80,110-101/2,80,101,'images/enemy-trump.png',4,0);
-var bug = new Enemy(-98+canvasWidth/2,110-77/2,98,77,'images/enemy-bug.png',4,0);
+var bug0 = new Enemy(-98,110-77/2,98,77,'images/enemy-bug.png',4,0);
+var bug1 = new Enemy(-98+canvasWidth/2,110-77/2,98,77,'images/enemy-bug.png',4,0);
 
 var bug2 = new Enemy(-98,240-77/2,98,77,'images/enemy-bug.png',5,0);
-var coulter = new Enemy(-87+canvasWidth/2,2*90,87,90,'images/enemy-coulter.png',5,0);
-var allEnemies = [trump,bug, bug2, coulter];
+var trump = new Enemy(-80+canvasWidth/2,2*101,80,101,'images/enemy-trump.png',5,0);
 
-/* use prototype chaining 
- * to subclass an Enemy instance
+
+
+var Reward = function() {
+ 
+  this.sprite = "images/Gem Blue.png";
+  this.timeToTraverse=2;
+
+  this.rectangle = new Rectangle(0,canvasHeight/4-171/2,101,171);
+
+} 
+ 
+
+Reward.prototype.update = function(dt) {
+ // update the x coord
+ //this.rectangle.x=this.rectangle.x+dt*;
+ var distance = dt*(Singleton.getInstance().getCanvasWidth()/this.timeToTraverse);
+ this.rectangle.x+=distance;
+ this.rectangle.x=this.rectangle.x % Singleton.getInstance().getCanvasWidth();
+ 
+ var normalizedRadians = (2*Math.PI)*(this.rectangle.x/Singleton.getInstance().getCanvasWidth());
+
+ this.rectangle.y+=Math.sin(normalizedRadians);
+ 
+
+ }
+
+  
+ 
+
+Reward.prototype.render = function()  {
+
+/*
+ * Do not show the reward until the player is down to 
+ * two lives.
  */
- var rewardToBe = new Enemy(-87+canvasWidth/2,2*90,87,90,'images/Gem Blue.png',5,0);
-var reward = Object.create(rewardToBe);
-reward.sprite="images/Gem Blue.png";
-reward.rectangle.width=101;
-reward.rectangle.height=171;
-reward.rectangle.y=300;
-reward.update = function(dt) {
- // console.log("reward update function.");
- this.sprite="images/Gem Blue.png";
- this.rectangle.x=20;
- this.rectangle.y=20;
- this.render(dt);
-}
-reward.render = function(dt)  {
-  //console.log(this.sprite);
-  var img = new Image();
-  img.src="images/Gem Blue.png";
-   ctx.drawImage(img, 20,20);
+  if (Singleton.getInstance().numberOfLives<3 && Singleton.getInstance().getState()=="playing") {
+   ctx.drawImage(Resources.get('images/Gem Blue.png'),this.rectangle.x,this.rectangle.y);
+ }
+   
    //console.log(this.rectangle.x); 
-
 }
+var reward = new Reward();
+
+var allEnemies = [bug0,bug1, bug2,trump];
+var allRewards = [reward];
+
+   // ctx.drawImage(Resources.get('images/enemy-coulter.png'),100,100);
 
 
-//var bug = new Enemy('images/enemy-bug.png', 3,0);
 
-//anEnemy.render();
 
 
 

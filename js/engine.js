@@ -96,10 +96,15 @@ var Engine = (function(global) {
      */
     function updateEntities(dt) {
         allEnemies.forEach(function(enemy) {
+        
             enemy.update(dt);
         });
+         allRewards.forEach(function(reward) {
+           
+            reward.update(dt);
+        });
         player.update(dt);
-        reward.update(dt);
+        //reward.update(dt);
     }
 
     /* This function initially draws the "game level", it will then call
@@ -156,6 +161,10 @@ var Engine = (function(global) {
         allEnemies.forEach(function(enemy) {
             enemy.render();
         });
+
+        allRewards.forEach(function(reward) {
+            reward.render();
+        });
         
         player.render();
     }
@@ -180,7 +189,6 @@ var Engine = (function(global) {
         'images/char-boy.png',
         'images/Star.png',
         'images/enemy-trump.png',
-        'images/enemy-coulter.png',
         'images/Gem Blue.png'
     ]);
     Resources.onReady(init);
