@@ -1,4 +1,6 @@
 
+
+
 /*
  * the Model prototype will be used to maintain
  * information to execute the game like
@@ -10,7 +12,7 @@ var Model = function() {
     var canvasInstance = $("canvas")[0];
     this.canvasWidth=canvasInstance.width;
     this.canvasHeight=canvasInstance.height;
-    this.value=0;
+
 
 }
 Model.prototype.getState = function() {
