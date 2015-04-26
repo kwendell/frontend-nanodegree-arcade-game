@@ -177,9 +177,11 @@ Player.prototype.setIsInvincible = function(isInvincible)  {
   if (isInvincible)  {
 
     this.timeToBeInvincible=5;
+    this.sprite="images/char-boy-invincible.png";
 
   } else {
     this.timeToBeInvincible=0;
+    this.sprite="images/char-boy.png";
   }
 }
 
@@ -219,24 +221,21 @@ Player.prototype.update = function(dt) {
 
     if (this.rectangle.intersects(allRewards[j].rectangle) && Singleton.getInstance().getState()!="made it") {
       if (Singleton.getInstance().getState()=="playing") {
-        this.isInvincible=true;
-        this.sprite="images/char-boy-invincible.png";
+        this.setIsInvincible(true);
+
       }
-
     }
-
   }
 
-    if (this.isInvincible)  {
-      this.timeToBeInvincible-=dt;
-      if (this.timeToBeInvincible <= 0) {
-        this.isInvincible=false;
-        this.timeToBeInvincible=5;
-        this.sprite="images/char-boy.png";
+  if (this.isInvincible)  {
+    this.timeToBeInvincible-=dt;
+    if (this.timeToBeInvincible <= 0) {
+      this.isInvincible=false;
+      this.timeToBeInvincible=5;
+      this.sprite="images/char-boy.png";
 
-      }
     }
-
+  }
 }
 Player.prototype.render = function() {
 
