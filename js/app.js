@@ -11,6 +11,7 @@ var Model = function() {
     this.canvasWidth=canvasInstance.width;
     this.canvasHeight=canvasInstance.height;
     this.value=0;
+
 }
 Model.prototype.getState = function() {
     return this.state;
@@ -18,12 +19,8 @@ Model.prototype.getState = function() {
 Model.prototype.setState = function(state) {
     this.state=state;
 }
-Model.prototype.setValue = function(value) {
-   this.value=value;
-}
-Model.prototype.getValue = function() {
-  return this.value;
-}
+
+
 /*
  * Wrap the model in a Singleton f
  */
@@ -110,7 +107,9 @@ var Enemy = function(x,y,width,height,imageUrl,timeToTraverse,row) {
   //this.rectangle=rectangle;
   Enemy.instanceCounter++;
  
-}
+} 
+
+
 
 
 Enemy.prototype.update = function(dt) {
@@ -135,8 +134,10 @@ Enemy.prototype.update = function(dt) {
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
- //console.log("enemy render");
+ //console.log("enemy render state = "+Singleton.getInstance().getState());
+ if (Singleton.getInstance().getState()!="gameOver") {
    ctx.drawImage(Resources.get(this.sprite), this.rectangle.x, this.rectangle.y);
+ }
 }
 /*
  * Add instance counter at class scope 
@@ -180,7 +181,7 @@ Player.prototype.update = function(dt) {
         if (this.rectangle.intersects(allEnemies[i].rectangle) && Singleton.getInstance().getState()!="made it") {
 
            
-            if (Singleton.getInstance().getState()!="killed") {
+            if (Singleton.getInstance().getState()!="killed" && Singleton.getInstance().getState()!="gameOver") {
             Singleton.getInstance().numberOfLives--;
              Singleton.getInstance().setState("killed");
              //console.log(this.rectangle.x+", "+this.rectangle.y.toFixed(0)+", "+this.rectangle.width+", "+ this.rectangle.height);
@@ -189,9 +190,16 @@ Player.prototype.update = function(dt) {
               }
             if (Singleton.getInstance().numberOfLives==0) {
                 Singleton.getInstance().setState("gameOver");
+                //console.log("setting state to g")
+
             }
         }
     }
+
+    /*
+     *  Check to see if a reward was picked up.
+     */
+    
 
     if (Singleton.getInstance().getState()=="killed")  {
 
@@ -204,7 +212,7 @@ Player.prototype.update = function(dt) {
 
 }
 Player.prototype.render = function() {
-   
+    
     if (Singleton.getInstance().getState()=="killed")  {
         // save the context
         ctx.save();
@@ -238,26 +246,18 @@ Player.prototype.render = function() {
 
 
     
-	}
-	else {
+	   } else if (Singleton.getInstance().getState()=="gameOver") {
+            //console.log("game over");
+     }
+	   else {
 
-        Singleton.getInstance().setState("playing");
+    //    Singleton.getInstance().setState("playing");
         this.currentAlpha=1.0;
-           
-
-       
-
 
          ctx.drawImage(Resources.get(this.sprite), this.rectangle.x,this.rectangle.y); 
 
     }
-      
-        
-    // else {
-       
-    //}
-
-    
+  
 }
 
 Player.prototype.handleInput = function(keyCode) {
@@ -325,6 +325,21 @@ var bug = new Enemy(-98+canvasWidth/2,110-77/2,98,77,'images/enemy-bug.png',4,0)
 
 var bug2 = new Enemy(-98,240-77/2,98,77,'images/enemy-bug.png',5,0);
 var coulter = new Enemy(-87+canvasWidth/2,2*90,87,90,'images/enemy-coulter.png',5,0);
+
+/* use prototype chaining 
+ * to subclass an Enemy instance
+ */;
+var reward = Object.create(coulter);
+reward.sprite="images/Gem Blue.png";
+reward.update = function(dt) {
+ // console.log("reward update function.");
+ //this.render(dt);
+}
+reward.render = function(dt)  {
+  console.log("reward::render");
+
+}
+
 
 //var bug = new Enemy('images/enemy-bug.png', 3,0);
 
