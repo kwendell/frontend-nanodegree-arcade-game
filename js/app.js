@@ -198,20 +198,17 @@ Player.prototype.update = function(dt) {
   * set the appropriate game state.
   */
 
-    //  console.log(allEnemies.length )
-    for (var i=0;i<allEnemies.length;i++)  {
-        if (this.rectangle.intersects(allEnemies[i].rectangle) && Singleton.getInstance().getState()!="made it" && this.isInvincible==false) {
+  //  console.log(allEnemies.length )
+  for (var i=0;i<allEnemies.length;i++)  {
+    if (this.rectangle.intersects(allEnemies[i].rectangle) && Singleton.getInstance().getState()!="made it" && this.isInvincible==false) {
 
+      if (Singleton.getInstance().getState()!="killed" && Singleton.getInstance().getState()!="gameOver") {
+        Singleton.getInstance().numberOfLives--;
+        Singleton.getInstance().setState("killed");
+      }
+      if (Singleton.getInstance().numberOfLives==0) {
+        Singleton.getInstance().setState("gameOver");
 
-            if (Singleton.getInstance().getState()!="killed" && Singleton.getInstance().getState()!="gameOver") {
-            Singleton.getInstance().numberOfLives--;
-             Singleton.getInstance().setState("killed");
-
-
-              }
-            if (Singleton.getInstance().numberOfLives==0) {
-                Singleton.getInstance().setState("gameOver");
-                //console.log("setting state to g")
 
             }
         }
