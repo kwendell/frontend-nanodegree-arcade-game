@@ -1,7 +1,7 @@
 
 /*
  * the Model prototype will be used to maintain
- * all information to execute the game like
+ * information to execute the game like
  * game state and canvas dimension.
  */
 var Model = function() {
@@ -21,6 +21,9 @@ Model.prototype.setState = function(state) {
 }
 Model.prototype.getCanvasWidth = function() {
   return this.canvasWidth;
+}
+Model.prototype.getCanvasHeight = function() {
+  return this.canvasHeight;
 }
 
 
@@ -52,7 +55,7 @@ var Singleton = (function () {
 /* The Rectangle prototype is used to determine 
  * collisions by providing an intersects method.
  * Composition is preferred to inheritance, each
- * entity, enemy, player has an instance of a Rectangle
+ * entity, (enemy, player and reward) has an instance of a Rectangle
  */
 var Rectangle = function(x,y,width,height) {
    
@@ -78,12 +81,17 @@ Rectangle.prototype.containsPoint= function(x,y) {
     var withinXBounds = (x<=this.x+this.width && x>=this.x) && (y<=this.y+this.height && y>=this.y);
     return withinXBounds;
 }
+/*
+ * The insterects method is used to determine collisions.
+ */
+
 Rectangle.prototype.intersects= function(otherRectangle) {
     // if any verties of the other rectangles 
     // are within this rectantle, return true
+    var retval = false;
     var vertices = [[otherRectangle.x,otherRectangle.y],[otherRectangle.x+otherRectangle.width,otherRectangle.y],
     [otherRectangle.x+otherRectangle.width,otherRectangle.y+otherRectangle.height],[otherRectangle.x,otherRectangle.y+otherRectangle.height]];
-    var retval = false;
+   
     for (var i=0;i<vertices.length;i++)  {
         retval = retval || this.containsPoint(vertices[i][0],vertices[i][1]);
     }
@@ -108,11 +116,10 @@ var Enemy = function(x,y,width,height,imageUrl,timeToTraverse,row) {
  
 } 
 
-/*  Add class scoope variable for the Enemy width */
-
-
-
-
+/*
+ * the Enemy::update method is used to 
+ * update the position, game state.
+ */
 
 Enemy.prototype.update = function(dt) {
   
@@ -162,16 +169,14 @@ var Player = function() {
     this.currentAlpha = 1.0;
     this.isInvincible = false;
     this.timeToBeInvincible = 5;
-    
-
 
 }
 
 
 
 Player.prototype.resetPosition = function() {
-    this.rectangle.x=this.startX;//ingleton.getInstance().canvasWidth/2-this.width/2;
-      this.rectangle.y=this.startY;//Singleton.getInstance().canvasHeight-this.height;
+    this.rectangle.x=this.startX;
+      this.rectangle.y=this.startY;
 }
 
 Player.prototype.update = function(dt) {
@@ -200,10 +205,17 @@ Player.prototype.update = function(dt) {
             }
         }
     }
+    /*
+     * If the player has collided with a reward, make the player invincible
+     * for three seconds.
+     */
     for (var j=0;j<allRewards.length;j++)  {
 
       if (this.rectangle.intersects(allRewards[j].rectangle) && Singleton.getInstance().getState()!="made it") {
+        if (Singleton.getInstance().getState()=="playing") {
         this.isInvincible=true;
+        this.sprite="images/char-boy-invincible.png";
+      }
       
       }
 
@@ -214,6 +226,8 @@ Player.prototype.update = function(dt) {
       if (this.timeToBeInvincible <= 0) {
         this.isInvincible=false;
         this.timeToBeInvincible=5;
+        this.sprite="images/char-boy.png";
+
       }
     }
 
@@ -246,21 +260,24 @@ Player.prototype.render = function() {
       // draw the player in the starting position
       
       this.resetPosition();
-      /*
-      this.rectangle.x=Singleton.getInstance().canvasWidth/2-this.width/2;
-      this.rectangle.y=Singleton.getInstance().canvasHeight-this.height-this.height;
-      */
+     
       ctx.drawImage(Resources.get("images/char-boy.png"),this.rectangle.x,this.rectangle.y);
       Singleton.getInstance().setState("playing");
 
 
     
 	   } else if (Singleton.getInstance().getState()=="gameOver") {
-            //console.log("game over");
+            ctx.font = "bold 36pt  Impact";
+            ctx.lineWidth=3;
+            ctx.strokeStyle='#000000';
+            ctx.fillStyle="rgba(255, 255, 255, 0.0)";
+            ctx.strokeText("Game Over",  20, 40);
+            ctx.strokeText("Press the ENTER key" ,  20, 80);
+            ctx.strokeText("to play again." ,  20, 120);
+
      }
 	   else {
 
-   
         this.currentAlpha=1.0;
         ctx.drawImage(Resources.get(this.sprite), this.rectangle.x,this.rectangle.y); 
 
@@ -269,7 +286,7 @@ Player.prototype.render = function() {
 }
 
 Player.prototype.handleInput = function(keyCode) {
-  if (Singleton.getInstance().getState()!="killed") {
+  if (Singleton.getInstance().getState()=="playing") {
     if (keyCode=="left") {
    
        this.rectangle.x-=canvasWidth/5;
@@ -301,20 +318,25 @@ Player.prototype.handleInput = function(keyCode) {
     } else if (keyCode=="down") {
       //  var updatedY = this.rectangle+canvasHeight/6;
 		//this.rectangle.y= Math.min(updatedY,canvasHeight-44);
-		var newY = this.rectangle.y+canvasHeight/6;
-		if (newY+44<canvasHeight) {
+		   var newY = this.rectangle.y+canvasHeight/6;
+		   if (newY+44<canvasHeight) {
           this.rectangle.y=newY;
-	    }
+	     }
 	  
 	   
+    } 
+  }  else  if (Singleton.getInstance().getState()=="gameOver" ) {
+      if (keyCode=="enter") {
+        console.log("reset game");
+        Singleton.getInstance().numberOfLives=3;
+        Singleton.getInstance().setState("playing");
+        this.resetPosition();
+        ctx.clearRect(0,0,Singleton.getInstance().getCanvasWidth(),Singleton.getInstance().getCanvasHeight());
+      }
+
     }
 
 }
-
-
-}
-
-
 
 
 // Now instantiate your objects.
@@ -324,16 +346,15 @@ Player.prototype.handleInput = function(keyCode) {
 //var thePlayer = new Player();
 var player = new Player();
 
-////this.rectangle = new Rectangle(-this.width,row*this.height+this.SPACE,this.width,this.height);
-//var rectangleTrump = new Rectangle(-80,1*80+60 ,80,101);
-
 var bug0 = new Enemy(-98,110-77/2,98,77,'images/enemy-bug.png',4,0);
 var bug1 = new Enemy(-98+canvasWidth/2,110-77/2,98,77,'images/enemy-bug.png',4,0);
 
 var bug2 = new Enemy(-98,240-77/2,98,77,'images/enemy-bug.png',5,0);
-var trump = new Enemy(-80+canvasWidth/2,2*101,80,101,'images/enemy-trump.png',5,0);
+var trump = new Enemy(-80+canvasWidth/2,2*101,80,101,'images/enemy-trump.png',4.9,0);
 
-
+/*
+ *  Create a reward object
+ */
 
 var Reward = function() {
  
@@ -346,16 +367,14 @@ var Reward = function() {
  
 
 Reward.prototype.update = function(dt) {
- // update the x coord
- //this.rectangle.x=this.rectangle.x+dt*;
+
  var distance = dt*(Singleton.getInstance().getCanvasWidth()/this.timeToTraverse);
  this.rectangle.x+=distance;
  this.rectangle.x=this.rectangle.x % Singleton.getInstance().getCanvasWidth();
  
  var normalizedRadians = (2*Math.PI)*(this.rectangle.x/Singleton.getInstance().getCanvasWidth());
 
- this.rectangle.y+=Math.sin(normalizedRadians);
- 
+ this.rectangle.y+=Math.sin(normalizedRadians); 
 
  }
 
@@ -379,23 +398,19 @@ var reward = new Reward();
 var allEnemies = [bug0,bug1, bug2,trump];
 var allRewards = [reward];
 
-   // ctx.drawImage(Resources.get('images/enemy-coulter.png'),100,100);
-
-
-
-
-
+  
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
 document.addEventListener('keyup', function(e) {
     var allowedKeys = {
+        13: 'enter',
         37: 'left',
         38: 'up',
         39: 'right',
         40: 'down'
     };
 
-    
+       
     player.handleInput(allowedKeys[e.keyCode]);
 });
