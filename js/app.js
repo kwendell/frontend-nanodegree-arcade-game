@@ -270,18 +270,18 @@ Player.prototype.render = function() {
     ctx.font = "bold 36pt  Impact";
     ctx.lineWidth=3;
     ctx.strokeStyle='#000000';
-            ctx.fillStyle="rgba(255, 255, 255, 0.0)";
-            ctx.strokeText("Game Over",  20, 40);
-            ctx.strokeText("Press the ENTER key" ,  20, 80);
-            ctx.strokeText("to play again." ,  20, 120);
+    ctx.fillStyle="rgba(255, 255, 255, 0.0)";
+    ctx.strokeText("Game Over",  20, 40);
+    ctx.strokeText("Press the ENTER key" ,  20, 80);
+    ctx.strokeText("to play again." ,  20, 120);
 
-     }
-	   else {
+  }
+	else {
 
-        this.currentAlpha=1.0;
-        ctx.drawImage(Resources.get(this.sprite), this.rectangle.x,this.rectangle.y);
+    this.currentAlpha=1.0;
+    ctx.drawImage(Resources.get(this.sprite), this.rectangle.x,this.rectangle.y);
 
-    }
+  }
 
 }
 
@@ -294,47 +294,45 @@ Player.prototype.handleInput = function(keyCode) {
        if (this.rectangle.x<0) {
 
         var x=canvasWidth+this.rectangle.x;
-		this.rectangle.x=x;
+		     this.rectangle.x=x;
        }
 
 
     } else if (keyCode=="right") {
 
-        this.rectangle.x+=canvasWidth/5;
-        if (this.rectangle.x+101>canvasWidth) {
+      this.rectangle.x+=canvasWidth/5;
+      if (this.rectangle.x+101>canvasWidth) {
 
         this.rectangle.x=this.rectangle.x-canvasWidth;
-       }
+      }
 
     } else if (keyCode=="up") {
 
-        this.rectangle.y-=canvasHeight/6;
-        if (this.rectangle.y<0)  {
-            Singleton.getInstance().setState("made it");
-			this.rectangle.y=0;
+      this.rectangle.y-=canvasHeight/6;
+      if (this.rectangle.y<0)  {
+        Singleton.getInstance().setState("made it");
+			  this.rectangle.y=0;
 
         }
 
     } else if (keyCode=="down") {
       //  var updatedY = this.rectangle+canvasHeight/6;
 		//this.rectangle.y= Math.min(updatedY,canvasHeight-44);
-		   var newY = this.rectangle.y+canvasHeight/6;
-		   if (newY+44<canvasHeight) {
-          this.rectangle.y=newY;
-	     }
-
-
+		  var newY = this.rectangle.y+canvasHeight/6;
+		  if (newY+44<canvasHeight) {
+        this.rectangle.y=newY;
+	    }
     }
   }  else  if (Singleton.getInstance().getState()=="gameOver" ) {
-      if (keyCode=="enter") {
-        console.log("reset game");
-        Singleton.getInstance().numberOfLives=3;
-        Singleton.getInstance().setState("playing");
-        this.resetPosition();
-        ctx.clearRect(0,0,Singleton.getInstance().getCanvasWidth(),Singleton.getInstance().getCanvasHeight());
-      }
-
+    if (keyCode=="enter") {
+      console.log("reset game");
+      Singleton.getInstance().numberOfLives=3;
+      Singleton.getInstance().setState("playing");
+      this.resetPosition();
+      ctx.clearRect(0,0,Singleton.getInstance().getCanvasWidth(),Singleton.getInstance().getCanvasHeight());
     }
+
+  }
 
 }
 
@@ -365,7 +363,6 @@ var Reward = function() {
 
 }
 
-
 Reward.prototype.update = function(dt) {
 
  var distance = dt*(Singleton.getInstance().getCanvasWidth()/this.timeToTraverse);
@@ -379,19 +376,16 @@ Reward.prototype.update = function(dt) {
  }
 
 
-
-
 Reward.prototype.render = function()  {
 
-/*
- * Do not show the reward until the player is down to
- * two lives.
- */
+ /*
+  * Do not show the reward until the player is down to
+  * two lives.
+  */
   if (Singleton.getInstance().numberOfLives<3 && Singleton.getInstance().getState()=="playing") {
-   ctx.drawImage(Resources.get('images/Gem Blue.png'),this.rectangle.x,this.rectangle.y);
- }
+    ctx.drawImage(Resources.get('images/Gem Blue.png'),this.rectangle.x,this.rectangle.y);
+  }
 
-   //console.log(this.rectangle.x);
 }
 var reward = new Reward();
 
