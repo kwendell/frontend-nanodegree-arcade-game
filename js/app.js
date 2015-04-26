@@ -230,30 +230,27 @@ Player.prototype.update = function(dt) {
   if (this.isInvincible)  {
     this.timeToBeInvincible-=dt;
     if (this.timeToBeInvincible <= 0) {
-      this.isInvincible=false;
-      this.timeToBeInvincible=5;
-      this.sprite="images/char-boy.png";
-
+      this.setIsInvincible(false);
     }
   }
 }
 Player.prototype.render = function() {
 
-    if (Singleton.getInstance().getState()=="killed")  {
-        // save the context
-        ctx.save();
-        this.currentAlpha = this.currentAlpha - (this.dt/this.timeToFade);
-        // decrease the opacity to show player perishing.
-        if (this.currentAlpha>0) {
-             ctx.globalAlpha=this.currentAlpha;
-             ctx.drawImage(Resources.get(this.sprite), this.rectangle.x,this.rectangle.y);
-        } else {
-            Singleton.getInstance().setState("playing");
-            // reset the position
+  if (Singleton.getInstance().getState()=="killed")  {
+    // save the context
+    ctx.save();
+    this.currentAlpha = this.currentAlpha - (this.dt/this.timeToFade);
+    // decrease the opacity to show player perishing.
+    if (this.currentAlpha>0) {
+      ctx.globalAlpha=this.currentAlpha;
+      ctx.drawImage(Resources.get(this.sprite), this.rectangle.x,this.rectangle.y);
+    } else {
+      Singleton.getInstance().setState("playing");
+      // reset the position
 
-            this.resetPosition();
-            this.currentAlpha=1.0;
-        }
+      this.resetPosition();
+      this.currentAlpha=1.0;
+    }
         //restore the context
         ctx.restore();
 
