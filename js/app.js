@@ -251,27 +251,25 @@ Player.prototype.render = function() {
       this.resetPosition();
       this.currentAlpha=1.0;
     }
-        //restore the context
-        ctx.restore();
+    //restore the context
+    ctx.restore();
 
-    } else if (Singleton.getInstance().getState()=="made it") {
-      // draw a star at the player location that made it.
+  } else if (Singleton.getInstance().getState()=="made it") {
+  // draw a star at the player location that made it.
 
-      ctx.drawImage(Resources.get("images/Star.png"),this.rectangle.x,this.rectangle.y);
+    ctx.drawImage(Resources.get("images/Star.png"),this.rectangle.x,this.rectangle.y);
 
-      // draw the player in the starting position
+    // draw the player in the starting position
 
-      this.resetPosition();
+    this.resetPosition();
 
-      ctx.drawImage(Resources.get("images/char-boy.png"),this.rectangle.x,this.rectangle.y);
-      Singleton.getInstance().setState("playing");
+    ctx.drawImage(Resources.get("images/char-boy.png"),this.rectangle.x,this.rectangle.y);
+    Singleton.getInstance().setState("playing");
 
-
-
-	   } else if (Singleton.getInstance().getState()=="gameOver") {
-            ctx.font = "bold 36pt  Impact";
-            ctx.lineWidth=3;
-            ctx.strokeStyle='#000000';
+	} else if (Singleton.getInstance().getState()=="gameOver") {
+    ctx.font = "bold 36pt  Impact";
+    ctx.lineWidth=3;
+    ctx.strokeStyle='#000000';
             ctx.fillStyle="rgba(255, 255, 255, 0.0)";
             ctx.strokeText("Game Over",  20, 40);
             ctx.strokeText("Press the ENTER key" ,  20, 80);
