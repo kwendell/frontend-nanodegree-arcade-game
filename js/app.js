@@ -208,26 +208,24 @@ Player.prototype.update = function(dt) {
       }
       if (Singleton.getInstance().numberOfLives==0) {
         Singleton.getInstance().setState("gameOver");
-
-
-            }
-        }
+      }
     }
-    /*
-     * If the player has collided with a reward, make the player invincible
-     * for three seconds.
-     */
-    for (var j=0;j<allRewards.length;j++)  {
+  }
+   /*
+    * If the player has collided with a reward, make the player invincible
+    * for three seconds.
+    */
+  for (var j=0;j<allRewards.length;j++)  {
 
-      if (this.rectangle.intersects(allRewards[j].rectangle) && Singleton.getInstance().getState()!="made it") {
-        if (Singleton.getInstance().getState()=="playing") {
+    if (this.rectangle.intersects(allRewards[j].rectangle) && Singleton.getInstance().getState()!="made it") {
+      if (Singleton.getInstance().getState()=="playing") {
         this.isInvincible=true;
         this.sprite="images/char-boy-invincible.png";
       }
 
-      }
-
     }
+
+  }
 
     if (this.isInvincible)  {
       this.timeToBeInvincible-=dt;
