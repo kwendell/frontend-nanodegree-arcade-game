@@ -156,12 +156,12 @@ Enemy.prototype.render = function() {
 var Player = function() {
     this.sprite='images/char-boy.png';
     this.width = 101;
-    this.height =88;
+    this.height =171;
     // k2 todo, use model to access canvas dimensions
 
 
-    this.startX=Singleton.getInstance().canvasWidth/2-this.width/2;
-    this.startY=Singleton.getInstance().canvasHeight-this.height-this.height/2;
+    this.startX=2*this.width;
+    this.startY=83*5;
 	  this.rectangle = new Rectangle(this.startX,this.startY,this.width,this.height);
     this.dt=0;
     // Parameters to fade the player when colliding.
@@ -289,26 +289,26 @@ Player.prototype.handleInput = function(keyCode) {
   if (Singleton.getInstance().getState()=="playing") {
     if (keyCode=="left") {
 
-       this.rectangle.x-=canvasWidth/5;
 
-       if (this.rectangle.x<0) {
 
-        var x=canvasWidth+this.rectangle.x;
-		     this.rectangle.x=x;
+       if (this.rectangle.x-this.rectangle.width>=0) {
+
+        this.rectangle.x-=this.rectangle.width;
        }
 
 
     } else if (keyCode=="right") {
-
-      this.rectangle.x+=canvasWidth/5;
-      if (this.rectangle.x+101>canvasWidth) {
-
-        this.rectangle.x=this.rectangle.x-canvasWidth;
+      if (this.rectangle.x+2*this.rectangle.width<=canvasWidth) {
+        this.rectangle.x+=this.rectangle.width;
       }
+
+
+
+
 
     } else if (keyCode=="up") {
 
-      this.rectangle.y-=canvasHeight/6;
+      this.rectangle.y-=83;
       if (this.rectangle.y<0)  {
         Singleton.getInstance().setState("made it");
 			  this.rectangle.y=0;
@@ -316,12 +316,9 @@ Player.prototype.handleInput = function(keyCode) {
         }
 
     } else if (keyCode=="down") {
-      //  var updatedY = this.rectangle+canvasHeight/6;
-		//this.rectangle.y= Math.min(updatedY,canvasHeight-44);
-		  var newY = this.rectangle.y+canvasHeight/6;
-		  if (newY+44<canvasHeight) {
-        this.rectangle.y=newY;
-	    }
+      if (this.rectangle.y+83+this.rectangle.height<canvasHeight) {
+        this.rectangle.y+=83;
+      }
     }
   }  else  if (Singleton.getInstance().getState()=="gameOver" ) {
     if (keyCode=="enter") {
@@ -389,8 +386,8 @@ Reward.prototype.render = function()  {
 }
 var reward = new Reward();
 
-var allEnemies = [bug0,bug1, bug2,trump];
-var allRewards = [reward];
+var allEnemies = [];
+var allRewards = [];
 
 
 
