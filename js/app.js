@@ -164,7 +164,7 @@ var Player = function() {
     this.startX=this.x;
 
     this.y=83*5;
-    this.startY;
+    this.startY=this.y;
 
 	  this.rectangle = new Rectangle(this.startX,this.startY+23,this.width,this.height-23);
     this.dt=0;
@@ -189,11 +189,25 @@ Player.prototype.setIsInvincible = function(isInvincible)  {
   }
 }
 
+Player.prototype.setX = function(newX) {
+this.x=newX;
+this.rectangle.x=newX;
+
+}
+
+Player.prototype.setY = function(newY) {
+this.y=newY;
+this.rectangle.y=newY+23;
+
+}
+
 
 
 Player.prototype.resetPosition = function() {
   this.x=this.startX;
   this.y=this.startY;
+  this.rectangle.x=this.startX;
+  this.rectangle.y=this.startY+23;
 }
 
 Player.prototype.update = function(dt) {
@@ -204,8 +218,10 @@ Player.prototype.update = function(dt) {
   * set the appropriate game state.
   */
 
-  //  console.log(allEnemies.length )
+
+  
   for (var i=0;i<allEnemies.length;i++)  {
+  
     if (this.rectangle.intersects(allEnemies[i].rectangle) && Singleton.getInstance().getState()!="made it" && this.isInvincible==false) {
 
       if (Singleton.getInstance().getState()!="killed" && Singleton.getInstance().getState()!="gameOver") {
@@ -297,13 +313,16 @@ Player.prototype.handleInput = function(keyCode) {
 
        if (this.x-this.rectangle.width>=0) {
 
-        this.x-=this.rectangle.width;
+        var newX =this.x-this.rectangle.width;
+		this.setX(newX);
+		
        }
 
 
     } else if (keyCode=="right") {
       if (this.x+2*this.rectangle.width<=canvasWidth) {
-        this.x+=this.rectangle.width;
+        var newX=this.x+this.rectangle.width;
+		this.setX(newX);
       }
 
 
@@ -312,8 +331,11 @@ Player.prototype.handleInput = function(keyCode) {
 
     } else if (keyCode=="up") {
 
-      this.y-=83;
-      if (this.y<0)  {
+      var newY=this.y-83;
+	  
+	  this.setY(newY);
+	
+      if (newY<0)  {
         Singleton.getInstance().setState("made it");
 			  //this.rectangle.y=0;
 
@@ -321,7 +343,8 @@ Player.prototype.handleInput = function(keyCode) {
 
     } else if (keyCode=="down") {
       if (this.y+83+this.rectangle.height+23<canvasHeight) {
-        this.y+=83;
+        var newY =this.y+83;
+		this.setY(newY);
       }
     }
   }  else  if (Singleton.getInstance().getState()=="gameOver" ) {
@@ -334,6 +357,7 @@ Player.prototype.handleInput = function(keyCode) {
     }
 
   }
+  
 
 }
 
