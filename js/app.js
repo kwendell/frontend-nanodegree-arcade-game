@@ -110,8 +110,10 @@ var Enemy = function(timeToTraverse,row) {
 
   this.sprite = "images/enemy-bug.png";
   this.time=timeToTraverse;
+  this.x=-101;
+  this.y=row*83;
 
-  this.rectangle = new Rectangle(-101,row*83,101,171);
+  this.rectangle = new Rectangle(this.x,this.y+77,101,77);
 
 
 }
@@ -125,7 +127,7 @@ Enemy.prototype.update = function(dt) {
 
    var desiredVelocity  = canvasWidth/this.time;
    var deltaX = desiredVelocity*dt;
-   var x = this.rectangle.x;
+   var x = this.x;
    x+=deltaX;
    // wrap the movement when it goes off-screen.
    //x=x % canvasWidth;
@@ -135,6 +137,7 @@ Enemy.prototype.update = function(dt) {
    // stop the enemies if a player died
    if (Singleton.getInstance().getState()!="killed") {
       this.rectangle.setX(x);
+	  this.x=x;
    }
 }
 
@@ -142,7 +145,7 @@ Enemy.prototype.update = function(dt) {
 Enemy.prototype.render = function() {
  //console.log("enemy render state = "+Singleton.getInstance().getState());
  if (Singleton.getInstance().getState()!="gameOver") {
-   ctx.drawImage(Resources.get(this.sprite), this.rectangle.x, this.rectangle.y);
+   ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
  }
 }
 
@@ -227,7 +230,9 @@ Player.prototype.update = function(dt) {
       if (Singleton.getInstance().getState()!="killed" && Singleton.getInstance().getState()!="gameOver") {
         Singleton.getInstance().numberOfLives--;
         Singleton.getInstance().setState("killed");
-      }
+		console.log(allEnemies[i].rectangle.x+", "+allEnemies[i].rectangle.y+", "+ allEnemies[i].rectangle.width+", "+  allEnemies[i].rectangle.height);
+        console.log(this.rectangle.x+", "+this.rectangle.y+", "+ this.rectangle.width+", "+  this.rectangle.height);
+	  }
       if (Singleton.getInstance().numberOfLives==0) {
         Singleton.getInstance().setState("gameOver");
       }
