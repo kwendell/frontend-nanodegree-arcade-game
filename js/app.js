@@ -106,12 +106,12 @@ Rectangle.prototype.intersects= function(otherRectangle) {
  */
 
 //var tempWidth = 0;
-var Enemy = function(x,y,width,height,imageUrl,timeToTraverse,row) {
+var Enemy = function(timeToTraverse,row) {
 
-  this.sprite = imageUrl;
+  this.sprite = "images/enemy-bug.png";
   this.time=timeToTraverse;
 
-  this.rectangle = new Rectangle(x,y,width,height);
+  this.rectangle = new Rectangle(-101,row*83,101,171);
 
 
 }
@@ -341,11 +341,7 @@ Player.prototype.handleInput = function(keyCode) {
 //var thePlayer = new Player();
 var player = new Player();
 
-var bug0 = new Enemy(-98,110-77/2,98,77,'images/enemy-bug.png',4,0);
-var bug1 = new Enemy(-98+canvasWidth/2,110-77/2,98,77,'images/enemy-bug.png',4,0);
-
-var bug2 = new Enemy(-98,240-77/2,98,77,'images/enemy-bug.png',5,0);
-var trump = new Enemy(-80+canvasWidth/2,2*101,80,101,'images/enemy-trump.png',4.9,0);
+var bug0 = new Enemy(4,1);
 
 /*
  *  Create a reward object
@@ -386,7 +382,7 @@ Reward.prototype.render = function()  {
 }
 var reward = new Reward();
 
-var allEnemies = [];
+var allEnemies = [bug0];
 var allRewards = [];
 
 
