@@ -111,9 +111,9 @@ var Enemy = function(timeToTraverse,row) {
   this.sprite = "images/enemy-bug.png";
   this.time=timeToTraverse;
   this.x=-101;
-  this.y=row*83;
+  this.y=row*83-30;
 
-  this.rectangle = new Rectangle(this.x,this.y+77,101,77);
+  this.rectangle = new Rectangle(this.x,this.y+47,101,77);
 
 
 }
@@ -375,6 +375,7 @@ Player.prototype.handleInput = function(keyCode) {
 var player = new Player();
 
 var bug0 = new Enemy(4,1);
+var bug1 = new Enemy(5,2);
 
 /*
  *  Create a reward object
@@ -415,7 +416,7 @@ Reward.prototype.render = function()  {
 }
 var reward = new Reward();
 
-var allEnemies = [bug0];
+var allEnemies = [bug0,bug1];
 var allRewards = [];
 
 
