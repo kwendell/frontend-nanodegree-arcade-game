@@ -160,9 +160,13 @@ var Player = function() {
     // k2 todo, use model to access canvas dimensions
 
 
-    this.startX=2*this.width;
-    this.startY=83*5;
-	  this.rectangle = new Rectangle(this.startX,this.startY,this.width,this.height);
+    this.x=2*this.width;
+    this.startX=this.x;
+
+    this.y=83*5;
+    this.startY;
+
+	  this.rectangle = new Rectangle(this.startX,this.startY+23,this.width,this.height-23);
     this.dt=0;
     // Parameters to fade the player when colliding.
     this.timeToFade = 2.0;
@@ -188,8 +192,8 @@ Player.prototype.setIsInvincible = function(isInvincible)  {
 
 
 Player.prototype.resetPosition = function() {
-  this.rectangle.x=this.startX;
-  this.rectangle.y=this.startY;
+  this.x=this.startX;
+  this.y=this.startY;
 }
 
 Player.prototype.update = function(dt) {
@@ -243,7 +247,7 @@ Player.prototype.render = function() {
     // decrease the opacity to show player perishing.
     if (this.currentAlpha>0) {
       ctx.globalAlpha=this.currentAlpha;
-      ctx.drawImage(Resources.get(this.sprite), this.rectangle.x,this.rectangle.y);
+      ctx.drawImage(Resources.get(this.sprite), this.x,this.y);
     } else {
       Singleton.getInstance().setState("playing");
       // reset the position
@@ -279,7 +283,7 @@ Player.prototype.render = function() {
 	else {
 
     this.currentAlpha=1.0;
-    ctx.drawImage(Resources.get(this.sprite), this.rectangle.x,this.rectangle.y);
+    ctx.drawImage(Resources.get(this.sprite), this.x,this.y);
 
   }
 
@@ -291,15 +295,15 @@ Player.prototype.handleInput = function(keyCode) {
 
 
 
-       if (this.rectangle.x-this.rectangle.width>=0) {
+       if (this.x-this.rectangle.width>=0) {
 
-        this.rectangle.x-=this.rectangle.width;
+        this.x-=this.rectangle.width;
        }
 
 
     } else if (keyCode=="right") {
-      if (this.rectangle.x+2*this.rectangle.width<=canvasWidth) {
-        this.rectangle.x+=this.rectangle.width;
+      if (this.x+2*this.rectangle.width<=canvasWidth) {
+        this.x+=this.rectangle.width;
       }
 
 
@@ -308,16 +312,16 @@ Player.prototype.handleInput = function(keyCode) {
 
     } else if (keyCode=="up") {
 
-      this.rectangle.y-=83;
-      if (this.rectangle.y<0)  {
+      this.y-=83;
+      if (this.y<0)  {
         Singleton.getInstance().setState("made it");
-			  this.rectangle.y=0;
+			  //this.rectangle.y=0;
 
         }
 
     } else if (keyCode=="down") {
-      if (this.rectangle.y+83+this.rectangle.height<canvasHeight) {
-        this.rectangle.y+=83;
+      if (this.y+83+this.rectangle.height+23<canvasHeight) {
+        this.y+=83;
       }
     }
   }  else  if (Singleton.getInstance().getState()=="gameOver" ) {
