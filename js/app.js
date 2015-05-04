@@ -262,6 +262,10 @@ Player.prototype.update = function(dt) {
       Singleton.getInstance().getState()=="playing") {
 
         this.setIsInvincible(true);
+        /*
+         * Turn off the reward while invincible
+         */
+        Singleton.getInstance().setIsRewardInPlay(false);
 
 
     }
