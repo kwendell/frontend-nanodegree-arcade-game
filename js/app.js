@@ -111,9 +111,10 @@ var Enemy = function(timeToTraverse,row) {
   this.sprite = "images/enemy-bug.png";
   this.time=timeToTraverse;
   this.x=-101;
-  this.y=row*83-30;
+  this.y=row*83-7;
+  this.rectangleOffsetY=75;
 
-  this.rectangle = new Rectangle(this.x,this.y+47,101,77);
+  this.rectangle = new Rectangle(this.x,this.y+this.rectangleOffsetY,101,77);
 
 
 }
@@ -160,16 +161,17 @@ var Player = function() {
     this.sprite='images/char-boy.png';
     this.width = 101;
     this.height =171;
+    this.rectangleOffsetY=63;
     // k2 todo, use model to access canvas dimensions
 
 
     this.x=2*this.width;
     this.startX=this.x;
 
-    this.y=83*5;
-    this.startY=this.y;
+    this.startY=83*5;
+    this.y=this.startY;
 
-	  this.rectangle = new Rectangle(this.startX,this.startY+23,this.width,this.height-23);
+	  this.rectangle = new Rectangle(this.startX,this.startY+this.rectangleOffsetY,this.width,86);
     this.dt=0;
     // Parameters to fade the player when colliding.
     this.timeToFade = 2.0;
@@ -200,7 +202,7 @@ this.rectangle.x=newX;
 
 Player.prototype.setY = function(newY) {
 this.y=newY;
-this.rectangle.y=newY+23;
+this.rectangle.y=newY+this.rectangleOffsetY;
 
 }
 
@@ -210,7 +212,7 @@ Player.prototype.resetPosition = function() {
   this.x=this.startX;
   this.y=this.startY;
   this.rectangle.x=this.startX;
-  this.rectangle.y=this.startY+23;
+  this.rectangle.y=this.startY+this.rectangleOffsetY;
 }
 
 Player.prototype.update = function(dt) {
@@ -222,16 +224,15 @@ Player.prototype.update = function(dt) {
   */
 
 
-  
+
   for (var i=0;i<allEnemies.length;i++)  {
-  
+
     if (this.rectangle.intersects(allEnemies[i].rectangle) && Singleton.getInstance().getState()!="made it" && this.isInvincible==false) {
 
       if (Singleton.getInstance().getState()!="killed" && Singleton.getInstance().getState()!="gameOver") {
         Singleton.getInstance().numberOfLives--;
         Singleton.getInstance().setState("killed");
-		console.log(allEnemies[i].rectangle.x+", "+allEnemies[i].rectangle.y+", "+ allEnemies[i].rectangle.width+", "+  allEnemies[i].rectangle.height);
-        console.log(this.rectangle.x+", "+this.rectangle.y+", "+ this.rectangle.width+", "+  this.rectangle.height);
+
 	  }
       if (Singleton.getInstance().numberOfLives==0) {
         Singleton.getInstance().setState("gameOver");
@@ -282,13 +283,13 @@ Player.prototype.render = function() {
   } else if (Singleton.getInstance().getState()=="made it") {
   // draw a star at the player location that made it.
 
-    ctx.drawImage(Resources.get("images/Star.png"),this.rectangle.x,this.rectangle.y);
+    ctx.drawImage(Resources.get("images/Star.png"),this.rectangle.x,this.rectangle.y-this.rectangleOffsetY);
 
     // draw the player in the starting position
 
     this.resetPosition();
 
-    ctx.drawImage(Resources.get("images/char-boy.png"),this.rectangle.x,this.rectangle.y);
+    ctx.drawImage(Resources.get("images/char-boy.png"),this.x,this.y);
     Singleton.getInstance().setState("playing");
 
 	} else if (Singleton.getInstance().getState()=="gameOver") {
@@ -314,32 +315,29 @@ Player.prototype.handleInput = function(keyCode) {
   if (Singleton.getInstance().getState()=="playing") {
     if (keyCode=="left") {
 
-
-
-       if (this.x-this.rectangle.width>=0) {
+      if (this.x-this.rectangle.width>=0) {
 
         var newX =this.x-this.rectangle.width;
-		this.setX(newX);
-		
-       }
+		    this.setX(newX);
+      }
 
 
     } else if (keyCode=="right") {
       if (this.x+2*this.rectangle.width<=canvasWidth) {
         var newX=this.x+this.rectangle.width;
-		this.setX(newX);
+		    this.setX(newX);
       }
-
-
 
 
 
     } else if (keyCode=="up") {
 
       var newY=this.y-83;
-	  
-	  this.setY(newY);
-	
+
+	    this.setY(newY);
+
+
+
       if (newY<0)  {
         Singleton.getInstance().setState("made it");
 			  //this.rectangle.y=0;
@@ -349,12 +347,12 @@ Player.prototype.handleInput = function(keyCode) {
     } else if (keyCode=="down") {
       if (this.y+83+this.rectangle.height+23<canvasHeight) {
         var newY =this.y+83;
-		this.setY(newY);
+		    this.setY(newY);
       }
     }
   }  else  if (Singleton.getInstance().getState()=="gameOver" ) {
     if (keyCode=="enter") {
-      console.log("reset game");
+
       Singleton.getInstance().numberOfLives=3;
       Singleton.getInstance().setState("playing");
       this.resetPosition();
@@ -362,7 +360,7 @@ Player.prototype.handleInput = function(keyCode) {
     }
 
   }
-  
+
 
 }
 
@@ -416,8 +414,8 @@ Reward.prototype.render = function()  {
 }
 var reward = new Reward();
 
-var allEnemies = [bug0,bug1];
-var allRewards = [];
+var allEnemies = [bug1];
+var allRewards = [reward];
 
 
 
