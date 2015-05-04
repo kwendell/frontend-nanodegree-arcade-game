@@ -375,7 +375,9 @@ Player.prototype.handleInput = function(keyCode) {
       Singleton.getInstance().setState("playing");
       this.resetPosition();
       ctx.clearRect(0,0,Singleton.getInstance().getCanvasWidth(),Singleton.getInstance().getCanvasHeight());
+      Singleton.getInstance().setIsRewardInPlay(false);
     }
+
 
   }
 
@@ -402,7 +404,7 @@ var Reward = function() {
   this.sprite = "images/Gem Blue.png";
   this.timeToTraverse=2;
 
-  this.rectangle = new Rectangle(0,canvasHeight/4-171/2,101,171);
+  this.rectangle = new Rectangle(0,canvasHeight/4-171/2,101,111);
 
 }
 
