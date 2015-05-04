@@ -10,6 +10,7 @@ var Model = function() {
     var canvasInstance = $("canvas")[0];
     this.canvasWidth=canvasInstance.width;
     this.canvasHeight=canvasInstance.height;
+    this.isRewardInPlay=false;
 
 }
 
@@ -24,6 +25,12 @@ Model.prototype.getCanvasWidth = function() {
 }
 Model.prototype.getCanvasHeight = function() {
   return this.canvasHeight;
+}
+Model.prototype.getIsRewardInPlay = function() {
+  return this.isRewardInPlay;
+}
+Model.prototype.setIsRewardInPlay = function(isRewardInPlay) {
+  this.isRewardInPlay=isRewardInPlay;
 }
 
 
@@ -187,7 +194,7 @@ Player.prototype.setIsInvincible = function(isInvincible)  {
   this.isInvincible=isInvincible;
   if (isInvincible)  {
 
-    this.timeToBeInvincible=5;
+    this.timeToBeInvincible=3;
     this.sprite="images/char-boy-invincible.png";
 
   } else {
@@ -233,6 +240,10 @@ Player.prototype.update = function(dt) {
 
       if (Singleton.getInstance().getState()!="killed" && Singleton.getInstance().getState()!="gameOver") {
         Singleton.getInstance().numberOfLives--;
+        if (Singleton.getInstance().numberOfLives<3) {
+          Singleton.getInstance().setIsRewardInPlay(true);
+
+        }
         Singleton.getInstance().setState("killed");
 
 	  }
@@ -247,11 +258,12 @@ Player.prototype.update = function(dt) {
     */
   for (var j=0;j<allRewards.length;j++)  {
 
-    if (this.rectangle.intersects(allRewards[j].rectangle) && Singleton.getInstance().getState()!="made it") {
-      if (Singleton.getInstance().getState()=="playing") {
-       // this.setIsInvincible(true);
+    if (Singleton.getInstance().getIsRewardInPlay() && this.rectangle.intersects(allRewards[j].rectangle) &&
+      Singleton.getInstance().getState()=="playing") {
 
-      }
+        this.setIsInvincible(true);
+
+
     }
   }
 
@@ -373,9 +385,9 @@ Player.prototype.handleInput = function(keyCode) {
 
 //var thePlayer = new Player();
 var player = new Player();
-
-var bug0 = new Enemy(4,1);
-var bug1 = new Enemy(5,2);
+var bug0 = new Enemy(2,0)
+var bug1 = new Enemy(3,1);
+var bug2 = new Enemy(4,2);
 
 /*
  *  Create a reward object
@@ -410,14 +422,15 @@ Reward.prototype.render = function()  {
   * Do not show the reward until the player is down to
   * two lives.
   */
-  if (Singleton.getInstance().numberOfLives<3 && Singleton.getInstance().getState()=="playing") {
+
+  if (Singleton.getInstance().getIsRewardInPlay()==true && Singleton.getInstance().getState()=="playing") {
     ctx.drawImage(Resources.get('images/Gem Blue.png'),this.rectangle.x,this.rectangle.y);
   }
 
 }
 var reward = new Reward();
 
-var allEnemies = [bug1];
+var allEnemies = [bug0,bug1,bug2];
 var allRewards = [reward];
 
 
