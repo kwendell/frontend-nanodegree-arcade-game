@@ -114,6 +114,7 @@ var Enemy = function(timeToTraverse,row) {
   this.y=row*83-7;
   this.rectangleOffsetY=75;
 
+
   this.rectangle = new Rectangle(this.x,this.y+this.rectangleOffsetY,101,77);
 
 
@@ -162,6 +163,7 @@ var Player = function() {
     this.width = 101;
     this.height =171;
     this.rectangleOffsetY=63;
+    this.horizontalLeniency=22
     // k2 todo, use model to access canvas dimensions
 
 
@@ -171,7 +173,7 @@ var Player = function() {
     this.startY=83*5;
     this.y=this.startY;
 
-	  this.rectangle = new Rectangle(this.startX,this.startY+this.rectangleOffsetY,this.width,86);
+	  this.rectangle = new Rectangle(this.startX+this.horizontalLeniency,this.startY+this.rectangleOffsetY,this.width-2*this.horizontalLeniency,86);
     this.dt=0;
     // Parameters to fade the player when colliding.
     this.timeToFade = 2.0;
@@ -196,7 +198,7 @@ Player.prototype.setIsInvincible = function(isInvincible)  {
 
 Player.prototype.setX = function(newX) {
 this.x=newX;
-this.rectangle.x=newX;
+this.rectangle.x=newX+this.horizontalLeniency;
 
 }
 
@@ -211,7 +213,7 @@ this.rectangle.y=newY+this.rectangleOffsetY;
 Player.prototype.resetPosition = function() {
   this.x=this.startX;
   this.y=this.startY;
-  this.rectangle.x=this.startX;
+  this.rectangle.x=this.startX+this.horizontalLeniency;
   this.rectangle.y=this.startY+this.rectangleOffsetY;
 }
 
@@ -247,7 +249,7 @@ Player.prototype.update = function(dt) {
 
     if (this.rectangle.intersects(allRewards[j].rectangle) && Singleton.getInstance().getState()!="made it") {
       if (Singleton.getInstance().getState()=="playing") {
-        this.setIsInvincible(true);
+       // this.setIsInvincible(true);
 
       }
     }
@@ -283,7 +285,7 @@ Player.prototype.render = function() {
   } else if (Singleton.getInstance().getState()=="made it") {
   // draw a star at the player location that made it.
 
-    ctx.drawImage(Resources.get("images/Star.png"),this.rectangle.x,this.rectangle.y-this.rectangleOffsetY);
+    ctx.drawImage(Resources.get("images/Star.png"),this.x,this.y);
 
     // draw the player in the starting position
 
@@ -317,14 +319,14 @@ Player.prototype.handleInput = function(keyCode) {
 
       if (this.x-this.rectangle.width>=0) {
 
-        var newX =this.x-this.rectangle.width;
+        var newX =this.x-(this.rectangle.width+2*this.horizontalLeniency);
 		    this.setX(newX);
       }
 
 
     } else if (keyCode=="right") {
       if (this.x+2*this.rectangle.width<=canvasWidth) {
-        var newX=this.x+this.rectangle.width;
+        var newX=this.x+(this.rectangle.width+2*this.horizontalLeniency);
 		    this.setX(newX);
       }
 
@@ -397,6 +399,7 @@ Reward.prototype.update = function(dt) {
  var normalizedRadians = (2*Math.PI)*(this.rectangle.x/Singleton.getInstance().getCanvasWidth());
 
  this.rectangle.y+=Math.sin(normalizedRadians);
+
 
  }
 
