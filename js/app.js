@@ -391,9 +391,9 @@ Player.prototype.handleInput = function(keyCode) {
 
 //var thePlayer = new Player();
 var player = new Player();
-var bug0 = new Enemy(2,0)
-var bug1 = new Enemy(3,1);
-var bug2 = new Enemy(4,2);
+var bug0 = new Enemy(2,1)
+var bug1 = new Enemy(3,2);
+var bug2 = new Enemy(4,3);
 
 /*
  *  Create a reward object
