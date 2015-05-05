@@ -6,6 +6,7 @@
  */
 
 
+'use strict';
 var Model = function() {
     this.state="playing";
     this.numberOfLives = 3;
@@ -14,26 +15,26 @@ var Model = function() {
     this.canvasHeight=canvasInstance.height;
     this.isRewardInPlay=false;
 
-}
+};
 
 Model.prototype.getState = function() {
     return this.state;
-}
+};
 Model.prototype.setState = function(state) {
     this.state=state;
-}
+};
 Model.prototype.getCanvasWidth = function() {
   return this.canvasWidth;
-}
+};
 Model.prototype.getCanvasHeight = function() {
   return this.canvasHeight;
-}
+};
 Model.prototype.getIsRewardInPlay = function() {
   return this.isRewardInPlay;
-}
+};
 Model.prototype.setIsRewardInPlay = function(isRewardInPlay) {
   this.isRewardInPlay=isRewardInPlay;
-}
+};
 
 
 /*
@@ -55,7 +56,7 @@ var Singleton = (function () {
             }
         return instance;
     }
-}
+};
 })();
 
 
@@ -71,22 +72,23 @@ var Rectangle = function(x,y,width,height) {
     this.y=y;
     this.width=width;
     this.height=height;
-}
+};
 Rectangle.prototype.setX = function(x) {
     this.x=x;
-}
+};
 
 Rectangle.prototype.setY = function(y) {
     this.y=y;
-}
+};
 
 /*  This is a helper function for the the
  *  intersects() method.
  */
 Rectangle.prototype.containsPoint= function(x,y) {
-    var withinXBounds = (x<=this.x+this.width && x>=this.x) && (y<=this.y+this.height && y>=this.y);
+    var withinXBounds = x<=this.x+this.width && x>=this.x &&
+                        y<=this.y+this.height && y>=this.y;
     return withinXBounds;
-}
+};
 /*
  * The insterects method is used to determine collisions.
  */
@@ -94,10 +96,13 @@ Rectangle.prototype.containsPoint= function(x,y) {
 Rectangle.prototype.intersects= function(otherRectangle) {
     /* if any vertices of the other rectangles
      * are within this rectantle, return true
-	 */
+     */
     var retval = false;
-    var vertices = [[otherRectangle.x,otherRectangle.y],[otherRectangle.x+otherRectangle.width,otherRectangle.y],
-    [otherRectangle.x+otherRectangle.width,otherRectangle.y+otherRectangle.height],[otherRectangle.x,otherRectangle.y+otherRectangle.height]];
+    var vertices = [[otherRectangle.x,otherRectangle.y],
+                    [otherRectangle.x+otherRectangle.width,otherRectangle.y],
+                    [otherRectangle.x+otherRectangle.width,
+                     otherRectangle.y+otherRectangle.height],
+                    [otherRectangle.x,otherRectangle.y+otherRectangle.height]];
 
     for (var i=0;i<vertices.length;i++)  {
         retval = retval || this.containsPoint(vertices[i][0],vertices[i][1]);
