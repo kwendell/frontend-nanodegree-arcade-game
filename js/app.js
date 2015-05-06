@@ -103,13 +103,12 @@ Rectangle.prototype.intersects= function(otherRectangle) {
                     [otherRectangle.x+otherRectangle.width,
                      otherRectangle.y+otherRectangle.height],
                     [otherRectangle.x,otherRectangle.y+otherRectangle.height]];
-
     for (var i=0;i<vertices.length;i++)  {
         retval = retval || this.containsPoint(vertices[i][0],vertices[i][1]);
     }
     return retval;
 
-}
+};
 
 
 
@@ -146,7 +145,7 @@ Enemy.prototype.update = function(dt) {
     // stop the enemies if a player died
     if (Singleton.getInstance().getState()!="killed") {
         this.rectangle.setX(x);
-	    this.x=x;
+        this.x=x;
     }
 }
 
@@ -175,11 +174,10 @@ var Player = function() {
 
     this.startY=83*5;
     this.y=this.startY;
-
-	this.rectangle = new Rectangle(this.startX+this.horizontalLeniency,
-	                               this.startY+this.rectangleOffsetY,
-								   this.width-2*this.horizontalLeniency,
-								   86);
+    this.rectangle = new Rectangle(this.startX+this.horizontalLeniency,
+                                   this.startY+this.rectangleOffsetY,
+                                   this.width-2*this.horizontalLeniency,
+                                   86);
     this.dt=0;
     // Parameters to fade the player when colliding.
     this.timeToFade = 2.0;
@@ -212,7 +210,7 @@ Player.prototype.setY = function(newY) {
 
 Player.prototype.resetPosition = function() {
     this.x=this.startX;
-	this.y=this.startY;
+    this.y=this.startY;
     this.rectangle.x=this.startX+this.horizontalLeniency;
     this.rectangle.y=this.startY+this.rectangleOffsetY;
 }
