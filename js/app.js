@@ -168,7 +168,7 @@ var Player = function() {
     this.height =171;
     this.rectangleOffsetY=63;
     this.horizontalLeniency=22
- 
+
     this.x=2*this.width;
     this.startX=this.x;
 
@@ -223,24 +223,24 @@ Player.prototype.update = function(dt) {
     */
     for (var i=0;i<allEnemies.length;i++)  {
 
-        if (this.rectangle.intersects(allEnemies[i].rectangle) && 
-		    Singleton.getInstance().getState()!="made it" && 
-			this.isInvincible==false) {
+        if (this.rectangle.intersects(allEnemies[i].rectangle) &&
+            Singleton.getInstance().getState()!="made it" &&
+            this.isInvincible==false) {
 
-            if (Singleton.getInstance().getState()!="killed" && 
-			    Singleton.getInstance().getState()!="gameOver") {
+            if (Singleton.getInstance().getState()!="killed" &&
+                Singleton.getInstance().getState()!="gameOver") {
                 Singleton.getInstance().numberOfLives--;
                 if (Singleton.getInstance().numberOfLives<3) {
                     Singleton.getInstance().setIsRewardInPlay(true);
                 }
                 Singleton.getInstance().setState("killed");
-	        }
+            }
             if (Singleton.getInstance().numberOfLives==0) {
                 Singleton.getInstance().setState("gameOver");
             }
         }
     }
-   
+
    /*
     * If the player has collided with a reward, make the player invincible
     * for three seconds.
@@ -297,7 +297,7 @@ Player.prototype.render = function() {
         ctx.drawImage(Resources.get("images/char-boy.png"),this.x,this.y);
         Singleton.getInstance().setState("playing");
 
-	} else if (Singleton.getInstance().getState()=="gameOver") {
+    } else if (Singleton.getInstance().getState()=="gameOver") {
         ctx.font = "bold 36pt  Impact";
         ctx.lineWidth=3;
         ctx.strokeStyle='#000000';
@@ -309,7 +309,7 @@ Player.prototype.render = function() {
 
         this.currentAlpha=1.0;
         ctx.drawImage(Resources.get(this.sprite), this.x,this.y);
-	}
+    }
 }
 /*
  * Player input handler to handle player controls and restart game.
@@ -321,13 +321,13 @@ Player.prototype.handleInput = function(keyCode) {
             if (this.x-this.rectangle.width>=0) {
 
                 var newX =this.x-(this.rectangle.width+2*this.horizontalLeniency);
-		        this.setX(newX);
+                this.setX(newX);
             }
 
         } else if (keyCode=="right") {
             if (this.x+2*this.rectangle.width<=canvasWidth) {
                 var newX=this.x+(this.rectangle.width+2*this.horizontalLeniency);
-		        this.setX(newX);
+                this.setX(newX);
             }
         } else if (keyCode=="up") {
 
@@ -336,13 +336,12 @@ Player.prototype.handleInput = function(keyCode) {
 
             if (newY<0)  {
                 Singleton.getInstance().setState("made it");
-			    //this.rectangle.y=0;
             }
 
         } else if (keyCode=="down") {
             if (this.y+83+this.rectangle.height+23<canvasHeight) {
                 var newY =this.y+83;
-		        this.setY(newY);
+                this.setY(newY);
             }
         }
     }  else  if (Singleton.getInstance().getState()=="gameOver" ) {
