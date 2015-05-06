@@ -94,17 +94,18 @@ Rectangle.prototype.containsPoint= function(x,y) {
  */
 
 Rectangle.prototype.intersects= function(otherRectangle) {
+
     /* if any vertices of the other rectangles
      * are within this rectantle, return true
      */
     var retval = false;
     var vertices = [[otherRectangle.x,otherRectangle.y],
                     [otherRectangle.x+otherRectangle.width,otherRectangle.y],
-                    [otherRectangle.x+otherRectangle.width,
-                     otherRectangle.y+otherRectangle.height],
+                    [otherRectangle.x+otherRectangle.width,otherRectangle.y+otherRectangle.height],
                     [otherRectangle.x,otherRectangle.y+otherRectangle.height]];
-    for (var i=0;i<vertices.length;i++)  {
-        retval = retval || this.containsPoint(vertices[i][0],vertices[i][1]);
+
+    for (var j=0; j<vertices.length; j++)  {
+        retval = retval || this.containsPoint(vertices[j][0],vertices[j][1]);
     }
     return retval;
 
