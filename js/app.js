@@ -262,6 +262,10 @@ Player.prototype.update = function(dt) {
         this.timeToBeInvincible-=dt;
         if (this.timeToBeInvincible <= 0) {
             this.setIsInvincible(false);
+            /*
+             * Put the reward back in play.
+             */
+             Singleton.getInstance().setIsRewardInPlay(true);
         }
     }
 }
@@ -375,7 +379,7 @@ var bug2 = new Enemy(4,3);
 var Reward = function() {
     this.sprite = "images/Gem Blue.png";
     this.timeToTraverse=2;
-    this.rectangle = new Rectangle(0,canvasHeight/4-171/2,101,111);
+    this.rectangle = new Rectangle(0,111,101,111);
 }
 
 Reward.prototype.update = function(dt) {
