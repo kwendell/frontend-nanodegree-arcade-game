@@ -125,7 +125,7 @@ var Enemy = function(timeToTraverse,row) {
     this.rectangleOffsetY=75;
 
     this.rectangle = new Rectangle(this.x,this.y+this.rectangleOffsetY,101,77);
-}
+};
 
 /*
  * the Enemy::update method is used to
@@ -147,7 +147,7 @@ Enemy.prototype.update = function(dt) {
         this.rectangle.setX(x);
         this.x=x;
     }
-}
+};
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
@@ -155,7 +155,7 @@ Enemy.prototype.render = function() {
     if (Singleton.getInstance().getState()!="gameOver") {
         ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
     }
-}
+};
 
 
 
@@ -167,7 +167,7 @@ var Player = function() {
     this.width = 101;
     this.height =171;
     this.rectangleOffsetY=63;
-    this.horizontalLeniency=22
+    this.horizontalLeniency=22;
 
     this.x=2*this.width;
     this.startX=this.x;
@@ -184,7 +184,7 @@ var Player = function() {
     this.currentAlpha = 1.0;
     this.isInvincible = false;
     this.timeToBeInvincible = 3;
-}
+};
 
 Player.prototype.setIsInvincible = function(isInvincible)  {
     this.isInvincible=isInvincible;
@@ -196,32 +196,34 @@ Player.prototype.setIsInvincible = function(isInvincible)  {
         this.timeToBeInvincible=0;
         this.sprite="images/char-boy.png";
     }
-}
+};
 
 Player.prototype.setX = function(newX) {
     this.x=newX;
     this.rectangle.x=newX+this.horizontalLeniency;
-}
+};
 
 Player.prototype.setY = function(newY) {
     this.y=newY;
     this.rectangle.y=newY+this.rectangleOffsetY;
-}
+};
 
 Player.prototype.resetPosition = function() {
     this.x=this.startX;
     this.y=this.startY;
     this.rectangle.x=this.startX+this.horizontalLeniency;
     this.rectangle.y=this.startY+this.rectangleOffsetY;
-}
+};
 
 Player.prototype.update = function(dt) {
     this.dt=dt;
+    var i;
+    var j;
    /*
     * Check to see if the player has collided with any enemies.   If so,
     * set the appropriate game state.
     */
-    for (var i=0;i<allEnemies.length;i++)  {
+    for (i=0;i<allEnemies.length;i +=1)  {
 
         if (this.rectangle.intersects(allEnemies[i].rectangle) &&
             Singleton.getInstance().getState()!="made it" &&
@@ -245,7 +247,7 @@ Player.prototype.update = function(dt) {
     * If the player has collided with a reward, make the player invincible
     * for three seconds.
     */
-    for (var j=0;j<allRewards.length;j++)  {
+    for (j=0;j<allRewards.length;j +=1)  {
         if (Singleton.getInstance().getIsRewardInPlay() && this.rectangle.intersects(allRewards[j].rectangle) &&
             Singleton.getInstance().getState()=="playing") {
 
@@ -267,7 +269,7 @@ Player.prototype.update = function(dt) {
              Singleton.getInstance().setIsRewardInPlay(true);
         }
     }
-}
+};
 /*
  * Player render method
  */
@@ -314,28 +316,30 @@ Player.prototype.render = function() {
         this.currentAlpha=1.0;
         ctx.drawImage(Resources.get(this.sprite), this.x,this.y);
     }
-}
+};
 /*
  * Player input handler to handle player controls and restart game.
  */
 Player.prototype.handleInput = function(keyCode) {
+    var newX;
+    var newY;
     if (Singleton.getInstance().getState()=="playing") {
         if (keyCode=="left") {
 
             if (this.x-this.rectangle.width>=0) {
 
-                var newX =this.x-(this.rectangle.width+2*this.horizontalLeniency);
+                newX =this.x-(this.rectangle.width+2*this.horizontalLeniency);
                 this.setX(newX);
             }
 
         } else if (keyCode=="right") {
             if (this.x+2*this.rectangle.width<=canvasWidth) {
-                var newX=this.x+(this.rectangle.width+2*this.horizontalLeniency);
+                newX=this.x+(this.rectangle.width+2*this.horizontalLeniency);
                 this.setX(newX);
             }
         } else if (keyCode=="up") {
 
-            var newY=this.y-83;
+            newY=this.y-83;
             this.setY(newY);
 
             if (newY<0)  {
@@ -344,7 +348,7 @@ Player.prototype.handleInput = function(keyCode) {
 
         } else if (keyCode=="down") {
             if (this.y+83+this.rectangle.height+23<canvasHeight) {
-                var newY =this.y+83;
+                newY =this.y+83;
                 this.setY(newY);
             }
         }
@@ -358,7 +362,7 @@ Player.prototype.handleInput = function(keyCode) {
             Singleton.getInstance().setIsRewardInPlay(false);
         }
     }
-}
+};
 
 
 // Now instantiate your objects.
@@ -367,7 +371,7 @@ Player.prototype.handleInput = function(keyCode) {
 
 //var thePlayer = new Player();
 var player = new Player();
-var bug0 = new Enemy(2,1)
+var bug0 = new Enemy(2,1);
 var bug1 = new Enemy(3,2);
 var bug2 = new Enemy(4,3);
 
@@ -379,7 +383,7 @@ var Reward = function() {
     this.sprite = "images/Gem Blue.png";
     this.timeToTraverse=2;
     this.rectangle = new Rectangle(0,111,101,111);
-}
+};
 
 Reward.prototype.update = function(dt) {
     var distance = dt*(Singleton.getInstance().getCanvasWidth()/this.timeToTraverse);
@@ -387,7 +391,7 @@ Reward.prototype.update = function(dt) {
     this.rectangle.x=this.rectangle.x % Singleton.getInstance().getCanvasWidth();
     var normalizedRadians = (2*Math.PI)*(this.rectangle.x/Singleton.getInstance().getCanvasWidth());
     this.rectangle.y+=Math.sin(normalizedRadians);
-}
+};
 
 
 Reward.prototype.render = function()  {
@@ -400,7 +404,7 @@ Reward.prototype.render = function()  {
         ctx.drawImage(Resources.get('images/Gem Blue.png'),this.rectangle.x,this.rectangle.y);
     }
 
-}
+};
 var reward = new Reward();
 
 var allEnemies = [bug0,bug1,bug2];
