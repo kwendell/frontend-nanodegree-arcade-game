@@ -7,33 +7,32 @@
 
 
 'use strict';
-var Model = function() {
-    this.state="playing";
+var Model = function () {
+    this.state = "playing";
     this.numberOfLives = 3;
     var canvasInstance = $("canvas")[0];
-    this.canvasWidth=canvasInstance.width;
-    this.canvasHeight=canvasInstance.height;
-    this.isRewardInPlay=false;
-
+    this.canvasWidth = canvasInstance.width;
+    this.canvasHeight = canvasInstance.height;
+    this.isRewardInPlay = false;
 };
 
-Model.prototype.getState = function() {
+Model.prototype.getState = function () {
     return this.state;
 };
-Model.prototype.setState = function(state) {
-    this.state=state;
+Model.prototype.setState = function (state) {
+    this.state = state;
 };
-Model.prototype.getCanvasWidth = function() {
-  return this.canvasWidth;
+Model.prototype.getCanvasWidth = function () {
+    return this.canvasWidth;
 };
-Model.prototype.getCanvasHeight = function() {
-  return this.canvasHeight;
+Model.prototype.getCanvasHeight = function () {
+    return this.canvasHeight;
 };
-Model.prototype.getIsRewardInPlay = function() {
-  return this.isRewardInPlay;
+Model.prototype.getIsRewardInPlay = function () {
+    return this.isRewardInPlay;
 };
-Model.prototype.setIsRewardInPlay = function(isRewardInPlay) {
-  this.isRewardInPlay=isRewardInPlay;
+Model.prototype.setIsRewardInPlay = function (isRewardInPlay) {
+    this.isRewardInPlay = isRewardInPlay;
 };
 
 
