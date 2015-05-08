@@ -53,10 +53,10 @@ var Singleton = (function () {
             if (!instance) {
                 instance = createInstance();
             }
-        return instance;
-    }
-};
-})();
+            return instance;
+        }
+    };
+}());
 
 
 
