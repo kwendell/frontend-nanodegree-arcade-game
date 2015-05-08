@@ -1,4 +1,3 @@
-
 /*
  * the Model prototype will be used to maintain
  * information to execute the game like
@@ -91,22 +90,24 @@ Rectangle.prototype.containsPoint = function (x, y) {
  * The insterects method is used to determine collisions.
  */
 
-Rectangle.prototype.intersects= function (otherRectangle) {
+Rectangle.prototype.intersects = function (otherRectangle) {
 
     /* if any vertices of the other rectangles
      * are within this rectantle, return true
      */
+    var j;
     var retval = false;
-    var vertices = [[otherRectangle.x,otherRectangle.y],
-                    [otherRectangle.x+otherRectangle.width,otherRectangle.y],
-                    [otherRectangle.x+otherRectangle.width,otherRectangle.y+otherRectangle.height],
-                    [otherRectangle.x,otherRectangle.y+otherRectangle.height]];
+    var vertices = [
+        [otherRectangle.x, otherRectangle.y],
+        [otherRectangle.x + otherRectangle.width, otherRectangle.y],
+        [otherRectangle.x + otherRectangle.width, otherRectangle.y + otherRectangle.height],
+        [otherRectangle.x, otherRectangle.y + otherRectangle.height]
+    ];
 
-    for (var j=0; j<vertices.length; j++)  {
-        retval = retval || this.containsPoint(vertices[j][0],vertices[j][1]);
+    for (j = 0; j < vertices.length; j += 1) {
+        retval = retval || this.containsPoint(vertices[j][0], vertices[j][1]);
     }
     return retval;
-
 };
 
 
